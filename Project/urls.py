@@ -23,8 +23,8 @@ from django.conf.urls.static import static
 
 
 
-handler404 = "yourapp.views.custom_404"
-handler500 = "yourapp.views.custom_500"
+handler404 = "core.views.custom_404"
+handler500 = "core.views.custom_500"
 
 
 urlpatterns = [
