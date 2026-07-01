@@ -1,0 +1,124 @@
+{% load static %}
+{% include 'home.html'%}
+{% block content %}
+<div class="dash_box d-flex flex-wrap gap-2 p-4">
+    {% if data %}
+        {% for i in data %}
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+
+                <h5 class="card-title">{{ i.product_name }}</h5>
+                <h6 class="text-muted">{{ i.product_code }}</h6>
+
+                <p class="card-text">
+                    {{ i.description }}
+                </p>
+
+                <p>
+                    <strong>Category:</strong> {{ i.item_category }}
+                </p>
+
+                <p>
+                    <strong>Cost Price:</strong> ₹{{ i.cost_price }}
+                </p>
+
+                <p>
+                    <strong>Selling Price:</strong> ₹{{ i.selling_price }}
+                </p>
+
+                <p>
+                    <strong>Quantity:</strong> {{ i.quantity }}
+                </p>
+
+                <p>
+                    <strong>Stock:</strong>
+                    {% if i.quantity %}
+                        <span class="badge bg-success">In Stock</span>
+                    {% else %}
+                        <span class="badge bg-danger">Out of Stock</span>
+                    {% endif %}
+                </p>
+
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-primary btn-sm updateBtn" data-bs-toggle="modal" data-bs-target="#updateModal">Update</button>
+                    <a href="{% url 'product_delete' i.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this product?');"> Delete </a>
+                </div>
+
+            </div>
+        </div>
+
+
+
+
+
+
+        
+<div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <form method="POST" id="updateForm" action="{% url 'product_update' i.id %}">
+        {% csrf_token %}
+
+        <div class="modal-header">
+          <h5 class="modal-title">Update Product Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <input type="hidden" name="id" id="emp_id">
+           <div class="mb-2">
+            <label>Product Name</label>
+            <input type="text" class="form-control" name="product_name" id="" value={{i.product_name}}>
+          </div>
+
+          <div class="mb-2">
+            <label>Description</label>
+            <input type="text" class="form-control" name="description" id="" value={{i.description}}>
+          </div>
+
+           <div class="mb-2">
+            <label>Item_category</label>
+            <input type="text" class="form-control" name="item_category" id="" value={{i.item_category}}>
+          </div>
+
+         
+          <div class="mb-2">
+            <label>Cost Price</label>
+            <input type="number" class="form-control" name="cost_price" id="" value="{{i.cost_price}}">
+          </div>
+
+           <div class="mb-2">
+            <label>Selling Price</label>
+            <input type="number" class="form-control" name="selling_price" id="" value="{{i.selling_price}}">
+          </div>
+
+          <div class="mb-2">
+            <label>Quantity</label>
+            <input type="number" class="form-control" name="quantity" id="" value="{{i.quantity}}">
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary">
+            Save Changes
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+        {% endfor %}
+    {% else %}
+        <h4>No Products Available</h4>
+    {% endif %}
+</div>
+
+{% endblock %}

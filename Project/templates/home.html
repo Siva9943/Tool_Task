@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-3 mb-5">
+    {% if messages %}
+    {% for message in messages %}
+        {% if message.tags == 'error' %}
+            <div class="alert alert-danger">{{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            
+        {% else %}
+            <div class="alert alert-success alert-dismissible fade show">{{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            
+        {% endif %}
+    {% endfor %}
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data" action="{% url 'tool_upload_info'%}">
+        {% csrf_token %}
+
+        <input class="form-control mb-3" type="file" name="file">
+
+        <button type="submit" class="btn btn-success">
+            Upload
+        </button>
+    </form>
+</div>
+{% endblock %}
+
+{% block errors %}
+    
+{% endblock %}
