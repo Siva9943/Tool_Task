@@ -7,7 +7,7 @@ class Product_info(models.Model):
     item_category=models.CharField(max_length=20)
     cost_price=models.DecimalField(max_digits=10, decimal_places=2)
     selling_price=models.DecimalField(max_digits=10, decimal_places=2)
-    quantity=models.IntegerField(max_length=10,null=False)
+    quantity=models.IntegerField(null=False)
     stock=models.BooleanField(default=True)
 
     
