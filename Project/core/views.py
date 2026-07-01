@@ -200,4 +200,12 @@ class ProductDeleteView(LoginRequiredMixin, View):
 
         messages.success(request, f"{product.product_name} deleted successfully.")
         return redirect("tool_dashboard")
+    
+
+def custom_404(request, exception):
+    return render(request, "error_page.html", status=404)
+
+
+def custom_500(request):
+    return render(request, "500.html", status=500)
 
