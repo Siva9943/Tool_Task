@@ -27,7 +27,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # Pending
 DEBUG = os.getenv('DEBUG_MODE')
-ALLOWED_HOSTS = ['https://tool-task.onrender.com']
+ALLOWED_HOSTS = ['tool-task.onrender.com']
 
 # Application definition
 
