@@ -1,5 +1,5 @@
+{% extends 'base.html' %}
 {% load static %}
-{% include 'home.html'%}
 {% block content %}
 <div class="dash_box d-flex flex-wrap gap-2 p-4">
     {% if data %}
@@ -60,42 +60,50 @@
       <form method="POST" id="updateForm" action="{% url 'product_update' i.id %}">
         {% csrf_token %}
 
+
+      
         <div class="modal-header">
           <h5 class="modal-title">Update Product Details</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 
         <div class="modal-body">
-          <input type="hidden" name="id" id="emp_id">
+        
+          <div class="mb-2">
+            <label for="">Product Code</label>
+            <input type="text" class="form-control" name="product_code" id="p_code" value="{{i.product_code}}">
+          
+          </div>
+
            <div class="mb-2">
             <label>Product Name</label>
-            <input type="text" class="form-control" name="product_name" id="" value={{i.product_name}}>
+            <input type="text" class="form-control" name="product_name" id="p_name" value="{{i.product_name}}">
           </div>
 
           <div class="mb-2">
             <label>Description</label>
-            <input type="text" class="form-control" name="description" id="" value={{i.description}}>
+            <input type="text" class="form-control" name="description" id="p_desc" value="{{i.description}}">
           </div>
 
            <div class="mb-2">
             <label>Item_category</label>
-            <input type="text" class="form-control" name="item_category" id="" value={{i.item_category}}>
+            <input type="text" class="form-control" name="item_category" id="p_cat" value="{{i.item_category}}">
           </div>
 
          
           <div class="mb-2">
-            <label>Cost Price</label>
-            <input type="number" class="form-control" name="cost_price" id="" value="{{i.cost_price}}">
+            <label>Actual Price</label>
+            <input type="number" class="text-decoration-line-through" step="0.01" name="cost_price" id="cost_price" value="{{i.cost_price}}">
           </div>
 
            <div class="mb-2">
             <label>Selling Price</label>
-            <input type="number" class="form-control" name="selling_price" id="" value="{{i.selling_price}}">
+            <input type="number" step="0.01" name="selling_price" id="selling_price" value="{{i.selling_price}}">
           </div>
 
           <div class="mb-2">
             <label>Quantity</label>
-            <input type="number" class="form-control" name="quantity" id="" value="{{i.quantity}}">
+            <input type="number" step="1" name="quantity" id="quantity" value="{{i.quantity}}">
           </div>
 
         </div>
@@ -115,7 +123,7 @@
   </div>
 </div>
 
-        {% endfor %}
+      {% endfor %}
     {% else %}
         <h4>No Products Available</h4>
     {% endif %}

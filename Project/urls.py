@@ -23,8 +23,8 @@ from django.conf.urls.static import static
 
 
 
-handler404 = "core.views.custom_404"
-handler500 = "core.views.custom_500"
+# handler404 = "yourapp.views.custom_404"
+# handler500 = "yourapp.views.custom_500"
 
 
 urlpatterns = [
@@ -32,9 +32,9 @@ urlpatterns = [
     path('',login_user,name='tool_login_info'),
     path('logout/',logout_user,name='tool_logout_info'),
     path('signup/',signup_user,name='tool_signup_info'),
-    # path('home/',upload,name='tool_home_info'),
+    path('home/',upload,name='tool_home_info'),
     path('upload/',upload_file,name='tool_upload_info'),
-    path('dashboard',dashboard,name="tool_dashboard"),
+    path('dashboard/',dashboard,name="tool_dashboard"),
     path('product/update/<int:pk>/',ProductUpdateView.as_view(),name='product_update'),
     path('product/delete/<int:pk>/',ProductDeleteView.as_view(),name='product_delete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,28 +1,63 @@
 {% load static %}
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Tool Task</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown" aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
+
+    <!-- LEFT SIDE -->
+    <a class="navbar-brand" href="#">
+      Tool Task
+    </a>
+
+    <!-- TOGGLER -->
+    <button class="navbar-toggler" type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation">
+
       <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="dropdown-item" href="{% url 'tool_logout_info'%}">Logout</a>
 
-    <div class="collapse navbar-collapse me-5" id="navbarNavDarkDropdown">
+    <!-- RIGHT SIDE MENU -->
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+
       <ul class="navbar-nav">
-        <li class="nav-item dropdown">
-          <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            Menu
-          </button>
-          <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item" href="#">demo</a></li>
-            <li><a class="dropdown-item" href="#">Products</a></li>
-            <li><a class="dropdown-item" href="{% url 'tool_logout_info'%}">Logout</a></li>
-          </ul>
+
+        {% if user.is_authenticated %}
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'tool_dashboard' %}">
+            Dashboard
+          </a>
         </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'tool_upload_info' %}">
+            Upload
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link text-danger" href="{% url 'tool_logout_info' %}">
+            Logout
+          </a>
+        </li>
+
+        {% else %}
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'tool_login_info' %}">
+            Login
+          </a>
+        </li>
+
+        {% endif %}
+
       </ul>
+
     </div>
 
-    
-    </div>
   </div>
 </nav>
