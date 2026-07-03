@@ -28,6 +28,55 @@
         </button>
     </form>
 </div>
+
+<div class="card border-primary mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Upload File Format</h5>
+    </div>
+
+    <div class="card-body">
+
+        <p class="text-danger">
+            <strong>Supported File Types:</strong> CSV (.csv), Excel (.xlsx, .xls)
+        </p>
+
+        <h6 class="fw-bold">Required Columns</h6>
+
+        <pre class="bg-light p-3 border rounded">
+product_code, product_name, description, item_category,
+cost_price, selling_price, quantity, stock
+        </pre>
+
+        <h6 class="fw-bold mt-3">Column Format</h6>
+
+        <ul>
+            <li><strong>product_code</strong> : Text, must start with <code>P</code> (Example: <code>P001</code>)</li>
+
+            <li><strong>product_name</strong> : Text, Maximum 40 characters</li>
+
+            <li><strong>description</strong> : Text</li>
+
+            <li><strong>item_category</strong> : Text, Maximum 20 characters</li>
+
+            <li><strong>cost_price</strong> : Decimal value (Example: <code>1200.50</code>)</li>
+
+            <li><strong>selling_price</strong> : Decimal value and must be greater than or equal to Cost Price</li>
+
+            <li><strong>quantity</strong> : Integer value (Example: <code>30</code>)</li>
+
+            <li><strong>stock</strong> : Boolean (<code>TRUE</code> or <code>FALSE</code>)</li>
+        </ul>
+
+        <h6 class="fw-bold">Sample Record</h6>
+
+        <pre class="bg-light p-3 border rounded">P001, Rice 25kg, Premium basmati rice, Grocery,
+1200.50, 1500.75, 30, TRUE
+        </pre>
+
+
+    </div>
+</div>
+
 {% endblock %}
 
 {% block errors %}

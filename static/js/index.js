@@ -1,42 +1,105 @@
+console.log("hello siva")
+document.addEventListener('DOMContentLoaded', function () {
+    var forms = document.querySelectorAll('.product-update-form');
+    console.log(forms)
+    forms.forEach(function (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault()
+            var isValid = true;
 
-document.getElementById("updateForm").addEventListener("submit", function(e) {
-    const p_code=document.getElementById('p_code')
-    const p_cat=document.getElementById('p_cat')
-    const p_name=document.getElementById('p_name')
-    const costPrice = parseFloat(document.getElementById("cost_price").value);
-    const sellingPrice = parseFloat(document.getElementById("selling_price").value);
-    const quantity = parseInt(document.getElementById("quantity").value);
+            function clearError(input) {
+                input.classList.remove('is-invalid');
+                var feedback = input.parentElement.querySelector('.invalid-feedback');
+                if (feedback) feedback.textContent = '';
+            }
 
-    if(!p_code.startsWith('P')){
-        alert("Product code Must Start with -P-")
-        e.preventDefault()
-        return;
-    }
-    if(isNaN(p_cat)){
-        alert("There Category Must BE Character")
-    }
-    if (isNaN(costPrice) || costPrice <= 0) {
-        alert("Cost Price must be greater than 0.");
-        e.preventDefault();
-        return;
-    }
+            function showError(input, message) {
+                isValid = false;
+                input.classList.add('is-invalid');
+                var feedback = input.parentElement.querySelector('.invalid-feedback');
+                if (feedback) feedback.textContent = message;
+            }
 
-    if (isNaN(sellingPrice) || sellingPrice <= 0) {
-        alert("Selling Price must be greater than 0.");
-        e.preventDefault();
-        return;
-    }
+            var code = form.querySelector('[name="product_code"]');
+            var name = form.querySelector('[name="product_name"]');
+            var desc = form.querySelector('[name="description"]');
+            var category = form.querySelector('[name="item_category"]');
+            var cost = form.querySelector('[name="cost_price"]');
+            var selling = form.querySelector('[name="selling_price"]');
+            var qty = form.querySelector('[name="quantity"]');
 
-    if (sellingPrice < costPrice) {
-        alert("Selling Price cannot be less than Cost Price.");
-        e.preventDefault();
-        return;
-    }
+            [code, name, desc, category, cost, selling, qty].forEach(clearError);
 
-    if (isNaN(quantity) || quantity < 0) {
-        alert("Quantity must be 0 or greater.");
-        e.preventDefault();
-        return;
-    }
+    
+            var codeVal = code.value.trim();
+            if (!codeVal) {
+                showError(code, 'Product Code is required.');
+            } else if (!/^P\d+$/.test(codeVal)) {
+                showError(code, 'Product Code must be like P001.');
+            } else if (codeVal.length > 20) {
+                showError(code, 'Product Code cannot exceed 20 characters.');
+            }
 
+            
+            var nameVal = name.value.trim();
+            if (!nameVal) {
+                showError(name, 'Product Name is required.');
+            } else if (nameVal.length > 40) {
+                showError(name, 'Product Name cannot exceed 40 characters.');
+            } else if (!/[A-Za-z]/.test(nameVal)) {
+                showError(name, 'Product Name must contain letters, not just numbers.');
+            }
+
+    
+            var descVal = desc.value.trim();
+            if (!descVal) {
+                showError(desc, 'Description is required.');
+            } else if (!/[A-Za-z]/.test(descVal)) {
+                showError(desc, 'Description must contain letters, not just numbers.');
+            }
+
+        
+            var categoryVal = category.value.trim();
+            if (!categoryVal) {
+                showError(category, 'Item Category is required.');
+            }
+            else if (categoryVal.length > 20) {
+                showError(category, 'Item Category cannot exceed 20 characters.');
+            }
+            else if (!/[A-Za-z]/.test(categoryVal)) {
+                showError(category, 'Item Category must contain letters.');
+            }
+
+        
+            var costVal = parseFloat(cost.value);
+            if (cost.value.trim() === '' || isNaN(costVal)) {
+                showError(cost, 'Cost Price must be numeric.');
+            } else if (costVal < 0) {
+                showError(cost, 'Cost Price cannot be negative.');
+            }
+
+            
+            var sellingVal = parseFloat(selling.value);
+            if (selling.value.trim() === '' || isNaN(sellingVal)) {
+                showError(selling, 'Selling Price must be numeric.');
+            } else if (sellingVal < 0) {
+                showError(selling, 'Selling Price cannot be negative.');
+            } else if (!isNaN(costVal) && sellingVal < costVal) {
+                showError(selling, 'Selling Price must be greater than or equal to Cost Price.');
+            }
+
+        
+            var qtyVal = qty.value.trim();
+            if (qtyVal === '' || !/^-?\d+$/.test(qtyVal)) {
+                showError(qty, 'Quantity must be an integer.');
+            } else if (parseInt(qtyVal, 10) < 0) {
+                showError(qty, 'Quantity cannot be negative.');
+            }
+
+              if (isValid) {
+                form.submit(); 
+            }
+            
+        });
+    });
 });
