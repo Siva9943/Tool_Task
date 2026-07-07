@@ -1,63 +1,124 @@
 {% load static %}
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-light shadow-sm bg-white">
 
-  <div class="container-fluid">
+    <div class="container">
 
-    <!-- LEFT SIDE -->
-    <a class="navbar-brand" href="#">
-      Tool Task
-    </a>
+        <a class="navbar-brand fw-bold" href="#">
+            Tool Task
+        </a>
 
-    <!-- TOGGLER -->
-    <button class="navbar-toggler" type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNav"
-      aria-controls="navbarNav"
-      aria-expanded="false"
-      aria-label="Toggle navigation">
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav">
 
-      <span class="navbar-toggler-icon"></span>
-    </button>
+            <span class="navbar-toggler-icon"></span>
 
-    <!-- RIGHT SIDE MENU -->
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        </button>
 
-      <ul class="navbar-nav">
+        <div class="collapse navbar-collapse" id="navbarNav">
 
-        {% if user.is_authenticated %}
+            <ul class="navbar-nav me-auto">
 
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'tool_dashboard' %}">
-            Dashboard
-          </a>
-        </li>
+                {% if user.is_authenticated %}
 
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'tool_upload_info' %}">
-            Upload
-          </a>
-        </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'tool_dashboard' %}">
+                        Dashboard
+                    </a>
+                </li>
 
-        <li class="nav-item">
-          <a class="nav-link text-danger" href="{% url 'tool_logout_info' %}">
-            Logout
-          </a>
-        </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'tool_upload_info' %}">
+                        Upload
+                    </a>
+                </li>
 
-        {% else %}
+                {% endif %}
 
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'tool_login_info' %}">
-            Login
-          </a>
-        </li>
+            </ul>
 
-        {% endif %}
+            {% if user.is_authenticated %}
 
-      </ul>
+            <div class="dropdown">
+
+                <a
+                    class="profile-circle dropdown-toggle"
+                    href="#"
+                    role="button"
+                    data-bs-toggle="dropdown">
+
+                    {{ user.first_name|default:user.username|slice:":1"|upper }}
+
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-end shadow">
+
+                    <li class="text-center p-3">
+
+                        <div class="profile-circle-large">
+
+                            {{ user.first_name|default:user.username|slice:":1"|upper }}
+
+                        </div>
+
+                        <h6 class="mt-2 mb-0">
+
+                            {{ user.get_full_name|default:user.username }}
+
+                        </h6>
+
+                        <small class="text-muted">
+
+                            {{ user.email }}
+
+                        </small>
+
+                    </li>
+
+                    <li><hr class="dropdown-divider"></li>
+
+                    <li>
+
+                        <a class="dropdown-item"
+                           href="{% url 'change_password' %}">
+
+                            🔒 Change Password
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a class="dropdown-item text-danger"
+                           href="{% url 'tool_logout_info' %}">
+
+                            🚪 Logout
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+            {% else %}
+
+            <a class="btn btn-primary"
+               href="{% url 'tool_login_info' %}">
+
+                Login
+
+            </a>
+
+            {% endif %}
+
+        </div>
 
     </div>
 
-  </div>
 </nav>

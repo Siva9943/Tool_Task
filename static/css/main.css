@@ -3,29 +3,158 @@
     margin: 0%;
     box-sizing: border-box;
 }
-nav{
-    margin-bottom: 80px;
-}
-/* login */
-.login_box{
-    width: 520px;
-    height: 450px;
-    box-shadow: 2px 2px blue, -2px -2px red;
-    border-radius: 15px;
-    margin: auto;
-}
-#login_form{
-    padding: 20px;
-}
-#title{ padding: 20px; text-shadow: 1px 1px blue; text-align: center;}
+.navbar{
 
-/* signup */
-.signup_box{
-    width: 500px;
-    height:400px;
-    box-shadow: 2px 2px red, -2px -2px blue;
-    border-radius: 15px;
-    margin: auto;
+    height:75px;
+
 }
-#signup_info{padding: 10px;}
-#signup_btn{margin: auto;}
+
+.profile-circle{
+
+    width:45px;
+
+    height:45px;
+
+    border-radius:50%;
+
+    background:#0d6efd;
+
+    color:white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-weight:700;
+
+    text-decoration:none;
+
+    font-size:18px;
+
+    transition:.3s;
+
+}
+
+.profile-circle:hover{
+
+    color:white;
+
+    transform:scale(1.05);
+
+    background:#0b5ed7;
+
+}
+
+.profile-circle-large{
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:50%;
+
+    background:#0d6efd;
+
+    color:white;
+
+    margin:auto;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:30px;
+
+    font-weight:bold;
+
+}
+
+.dropdown-menu{
+
+    width:260px;
+
+    border:none;
+
+    border-radius:18px;
+
+    padding:10px;
+
+}
+
+.dropdown-item{
+
+    border-radius:10px;
+
+    padding:12px;
+
+}
+
+.dropdown-item:hover{
+
+    background:#f3f5f8;
+
+}
+.toast {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    animation: slideIn 0.4s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Progress bar animation */
+.toast-progress {
+    width: 100%;
+    animation: progressBar 3s linear forwards;
+}
+
+@keyframes progressBar {
+    from { width: 100%; }
+    to { width: 0%; }
+}
+
+
+.pagination .page-link {
+    color: #0d6efd;
+    border-radius: 10px;
+    margin: 0 4px;
+    border: none;
+    padding: 10px 16px;
+    transition: all 0.3s ease;
+}
+
+.pagination .page-link:hover {
+    background: #0d6efd;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.pagination .page-item.active .page-link {
+    background: linear-gradient(135deg, #0d6efd, #6610f2);
+    border: none;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(13,110,253,.3);
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #adb5bd;
+    background: #f8f9fa;
+}
+
+.pagination {
+    gap: 6px;
+}

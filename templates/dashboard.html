@@ -18,8 +18,9 @@
     {% endif %}
 
 <div class="dash_box d-flex flex-wrap gap-2 p-4">
-    {% if data %}
-        {% for i in data %}
+  {% if page_obj %}
+    {% for i in page_obj %}
+   
         <div class="card" style="width: 18rem;">
             <div class="card-body">
 
@@ -67,7 +68,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
 
-      <form method="POST" class="product-update-form" novalidate action="{% url 'product_update' i.id %}">
+      <form method="POST" class="product-update-form" enctype="multipart/form-data" novalidate action="{% url 'product_update' i.id %}">
         {% csrf_token %}
 
         <div class="modal-header">
@@ -118,6 +119,12 @@
             <input type="number" class="form-control" step="1" name="quantity" value="{{i.quantity}}">
             <div class="invalid-feedback"></div>
           </div>
+           <div class="mb-2">
+            <label>Expire Date</label>
+            <input type="date" class="form-control" name="expire_date" value="{{i.expire_date}}">
+            <div class="invalid-feedback"></div>
+          </div>
+
 
         </div>
 
@@ -142,5 +149,71 @@
     {% endif %}
 </div>
 
+<nav class="d-flex justify-content-center mt-4">
+    <ul class="pagination shadow-sm">
+
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">
+                    &laquo; First
+                </a>
+            </li>
+
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                    &lsaquo; Previous
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">&laquo; First</span>
+            </li>
+
+            <li class="page-item disabled">
+                <span class="page-link">&lsaquo; Previous</span>
+            </li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+            {% elif num >= page_obj.number|add:"-2" and num <= page_obj.number|add:"2" %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                    Next &rsaquo;
+                </a>
+            </li>
+
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+                    Last &raquo;
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">Next &rsaquo;</span>
+            </li>
+
+            <li class="page-item disabled">
+                <span class="page-link">Last &raquo;</span>
+            </li>
+        {% endif %}
+
+    </ul>
+</nav>
+
+<div class="text-center mt-2 text-muted">
+    Showing page <strong>{{ page_obj.number }}</strong> of
+    <strong>{{ page_obj.paginator.num_pages }}</strong>
+</div>
 
 {% endblock %}

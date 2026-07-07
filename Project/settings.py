@@ -26,9 +26,18 @@ load_dotenv()
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
+
+SERVER_TYPE=os.environ.get('SERVER_TYPE','arista-ppv.dev.inesssolutions.net')
+PRODUCTION='arista-ppv.inesssolutions.net'
+
 # Pending
 DEBUG = os.getenv('DEBUG_MODE')
-ALLOWED_HOSTS = ['tool-task.onrender.com']
+ALLOWED_HOSTS = []
+ALLOWED_EMAIL_DOMAINS = [
+    "ineesconsultion.com",
+    "gmail.com"
+]
+
 
 
 # Application definition
@@ -53,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware'
 ]
 
 ROOT_URLCONF = 'Project.urls'
@@ -60,7 +70,7 @@ ROOT_URLCONF = 'Project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -159,6 +169,10 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
 
+LOGIN_URL = '/'
+LOGIN_REDIRECT_URL = 'tool_home_info'
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE=True
 
 
 

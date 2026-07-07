@@ -2,53 +2,71 @@
 {% load static %}
 
 {% block content %}
-{% if messages %}
-    {% for message in messages %}
-        {% if message.tags == 'error' %}
-            <div class="alert alert-danger alert-dismissible fade show">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+<div class="login-page">
+    <div class="login-card">
+
+        <div class="login-header">
+            <div class="login-icon">
+                <i class="bi bi-person-circle"></i>
             </div>
-        {% else %}
-            <div class="alert alert-success alert-dismissible fade show">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
+            <h2>Welcome Back</h2>
+            <p>Sign in to continue</p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert color-primary alert-{{ message.tags }} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
         {% endif %}
-    {% endfor %}
-{% endif %}
 
-<div class="login_box">
-  <h3 id="title">Login Form</h3>
-  <form method="POST" id="login_form">
-    {% csrf_token %}
+        <form method="POST">
+            {% csrf_token %}
 
-    <div class="mb-3 row">
-        <label for="Email" class="col-sm-2 col-form-label">Email</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" id="" name="email" placeholder="Enter Your Valid Email">
-        </div>
+            <div class="mb-4">
+                <label class="form-label">Email Address</label>
+                <input
+                    type="email"
+                    name="email"
+                    class="form-control"
+                    placeholder="Enter your email"
+                    required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input
+                    type="password"
+                    name="password"
+                    class="form-control"
+                    placeholder="Enter your password"
+                    required>
+            </div>
+
+            <div class="d-flex justify-content-end mb-4">
+                <a href="{% url 'password_reset' %}" class="forgot-link">
+                    Forgot Password?
+                </a>
+            </div>
+
+            <button class="btn btn-primary w-100 login-btn">
+                Login
+            </button>
+
+            <div class="text-center mt-4">
+                Don't have an account?
+                <a href="{% url 'tool_signup_info' %}" class="signup-link">
+                    Register
+                </a>
+            </div>
+
+        </form>
+
     </div>
-
-    <div class="mb-3 row">
-        <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
-        <div class="col-sm-10">
-            <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Enter Your Password">
-        </div>
-    </div>
-
-    <div><a href="{% url 'change_password'%}">Change Password</a></div>
-
-    <div class="text-center">
-        <button type="submit" class="btn btn-primary">
-            Login
-        </button>
-    </div>
-</form>
-<div class="text-center">
-    <a class='mt-3 text-center' href="{% url 'tool_signup_info'%}">Create An Account</a>
 </div>
 
-</div>
-
-{% endblock %} 
+{% endblock %}
