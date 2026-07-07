@@ -32,7 +32,7 @@ PRODUCTION='arista-ppv.inesssolutions.net'
 
 # Pending
 DEBUG = os.getenv('DEBUG_MODE')
-ALLOWED_HOSTS = ["tool-task.onrender.com"]
+ALLOWED_HOSTS = [os.getenv('ALLOWED_HOST')]
 ALLOWED_EMAIL_DOMAINS = [
     "ineesconsultion.com",
     "gmail.com"
