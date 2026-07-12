@@ -102,6 +102,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Project.wsgi.application'
 
+SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases

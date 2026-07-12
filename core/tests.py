@@ -13,8 +13,8 @@ class SignupOtpFlowTests(TestCase):
             response = self.client.post(
                 reverse("tool_signup_info"),
                 {
-                    "full_name": "Test User",
-                    "email": "test@company.com",
+                    "full_name": "Siva@9432",
+                    "email": "sivaprakash@inessconsulting.com",
                     "password1": "StrongPass123",
                     "password2": "StrongPass123",
                 },
@@ -34,5 +34,5 @@ class SignupOtpFlowTests(TestCase):
 
         self.assertEqual(verify_response.status_code, 302)
         self.assertEqual(User.objects.count(), 1)
-        user = User.objects.get(email="test@company.com")
-        self.assertEqual(user.first_name, "Test User")
+        user = User.objects.get(email="sivaprakash@inessconsulting.com")
+        self.assertEqual(user.first_name, "Siva@9432")
