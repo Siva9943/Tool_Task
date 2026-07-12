@@ -22,7 +22,6 @@ from .forms import *
 from django.contrib.auth.models import User
 from .forms import CustomUserForm
 from .models import Email_DB
-from email_ops.send_mail_util import send_mail_gmail
 from email_ops.utils.email_service import send_email
 from django.db import models
 from simple_history.models import HistoricalRecords
@@ -132,11 +131,13 @@ Thank you.
             }
             request.session.set_expiry(600)
 
-            send_mail_gmail(
-                to_email=email,
-                cc_email=None,
-                subject="Verify your signup",
-                message=f"Your OTP for account verification is {otp}. It is valid for 10 minutes.",
+            send_email(
+                email_type="notification",
+                to=email,
+                context={
+                    "subject": "Verify your signup",
+                    "message": f"Your OTP for account verification is {otp}. It is valid for 10 minutes.",
+                },
             )
 
             messages.success(request, "We sent a verification code to your email.")

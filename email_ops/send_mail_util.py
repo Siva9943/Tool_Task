@@ -14,6 +14,7 @@ def send_mail_gmail(to_email, cc_email, subject, message, attachments=None):
             username=os.getenv("EMAIL_HOST_USER"),
             password=os.getenv("EMAIL_HOST_PASSWORD"),
             use_tls=True,
+            timeout=10,
         )
         if isinstance(to_email, str):
             to_email = [to_email]
