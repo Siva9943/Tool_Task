@@ -2,7 +2,7 @@ import pandas as pd
 from django.db import transaction
 from .models import Product_info
 from .validation import COLUMN_FIELD_MAP, validate_template, validate_row
-
+import datetime
 
 def map_row(raw_row):
     mapped = {}
@@ -24,10 +24,12 @@ def process_upload_file(user, uploaded_file):
             "failed_count": 0,
             "products": [],
             "invalid_rows": [],
-            "template_error": "Only .csv and .xlsx files are supported.",
+            "template_error": "",
         }
 
+    # print(df.columns, "hii")
     template_errors = validate_template(df.columns)
+    # print(template_errors,"siva")
     if template_errors:
         return {
             "success_count": 0,
@@ -46,6 +48,7 @@ def process_upload_file(user, uploaded_file):
     invalid_rows = []
 
     for idx, raw_row in df.iterrows():
+        
         row_number = idx + 2
         mapped_row = map_row(raw_row)
 
@@ -56,16 +59,30 @@ def process_upload_file(user, uploaded_file):
             existing_codes,
             existing_names,
         )
-
+        
         if errors:
             invalid_rows.append({
                 "row_number": row_number,
                 "product_code": mapped_row.get("product_code", ""),
                 "product_name": mapped_row.get("product_name", ""),
+                "description": mapped_row.get("description", ""),
+                "item_category": mapped_row.get("item_category", ""),
+                "cost_price": mapped_row.get("cost_price", ""),
+                "selling_price": mapped_row.get("selling_price", ""),
                 "quantity": mapped_row.get("quantity", ""),
-                "expire_date": mapped_row.get("expire_date", ""),
+                "expire_date": (
+                    mapped_row.get("expire_date").strftime("%Y-%m-%d")
+                    if hasattr(mapped_row.get("expire_date"), "strftime")
+                    else mapped_row.get("expire_date", "")
+                ),
                 "error_message": "; ".join(errors),
+                "error_list": errors,
+                "required_status": "Fail" if any("is required" in e or "required" in e.lower() for e in errors) else "Pass",
+                "datatype_status": "Fail" if any("must be a" in e or "format" in e or "must be numeric" in e or "integer" in e for e in errors) else "Pass",
+                "duplicate_status": "Fail" if any("exists in the database" in e or "Duplicate" in e or "already exists" in e for e in errors) else "Pass",
+                "range_status": "Fail" if any(">=" in e or "greater than" in e or "past" in e or "characters" in e or "length" in e for e in errors) else "Pass",
             })
+            
         else:
             valid_objects.append(Product_info(
                 user=user,
@@ -80,8 +97,7 @@ def process_upload_file(user, uploaded_file):
             ))
         
     if valid_objects:
-        with transaction.atomic():
-            Product_info.objects.bulk_create(valid_objects, batch_size=500)
+        Product_info.objects.bulk_create(valid_objects, batch_size=500)
 
     return {
         "success_count": len(valid_objects),

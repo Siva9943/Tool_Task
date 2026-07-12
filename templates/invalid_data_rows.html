@@ -1,0 +1,14 @@
+{% for err in errors %}
+<tr>
+    <td class="fw-bold">{{ forloop.counter0|add:errors.start_index }}</td>
+    <td>{{ err.product_code|default:"-" }}</td>
+    <td>{{ err.product_name|default:"-" }}</td>
+    <td>{{ err.quantity|default:"-" }}</td>
+    <td>{{ err.cost_price|default:"-" }}</td>
+    <td>{{ err.selling_price|default:"-" }}</td>
+    <td>{{ err.expire_date|default:"-" }}</td>
+    <td style="min-width:260px; text-align:left; white-space:normal;" class="text-danger fw-semibold">
+        {{ err.error_message }}
+    </td>
+</tr>
+{% endfor %}

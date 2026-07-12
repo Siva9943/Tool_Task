@@ -27,20 +27,35 @@ load_dotenv()
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 
-SERVER_TYPE=os.environ.get('SERVER_TYPE','arista-ppv.dev.inesssolutions.net')
-PRODUCTION='arista-ppv.inesssolutions.net'
+import ssl
+
+CELERY_BROKER_USE_SSL = {
+    "ssl_cert_reqs": ssl.CERT_NONE,
+}
+
+CELERY_REDIS_BACKEND_USE_SSL = {
+    "ssl_cert_reqs": ssl.CERT_NONE,
+}
+PRODUCTION = "PRODUCTION"
+DEVELOPMENT = "DEV"
+SERVER_TYPE = os.getenv("SERVER_TYPE", DEVELOPMENT)
+
+
+TEST_EMAIL = os.getenv('TEST_EMAIL', 'sivaprakash622003@gmail.com')
+REDIS_URL = os.getenv(
+    "REDIS_URL",
+    "redis://127.0.0.1:6379/0"
+)
+
 
 # Pending
-DEBUG = os.getenv('DEBUG_MODE')
-ALLOWED_HOSTS = [os.getenv('ALLOWED_HOST')]
+DEBUG = os.getenv('DEBUG_MODE')=='True'
+ALLOWED_HOSTS = ['bulk-upload-tool.onrender.com','localhost','127.0.0.1']
 ALLOWED_EMAIL_DOMAINS = [
-    "ineesconsultion.com",
+    "inessconsulting.com",
     "gmail.com"
 ]
 
-
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -50,14 +65,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
+    'email_ops',
     'simple_history',
+    # 'core.apps.CoreConfig',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    "simple_history.middleware.HistoryRequestMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    "simple_history.middleware.HistoryRequestMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -107,11 +124,21 @@ DATABASES = {
     }
 }
 
+# import dj_database_url
+
+# DATABASES = {
+#     "default": dj_database_url.config(
+#         default=os.environ.get("DATABASE_URL"),
+#         conn_max_age=600,
+#         ssl_require=False,
+#     )
+# }
 
 
-# settings.py
-CELERY_BROKER_URL = "redis://localhost:6379/0"
-CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
+# default="redis://localhost:6379/0"
+
+CELERY_BROKER_URL = os.getenv("REDIS_URL")
+CELERY_RESULT_BACKEND = os.getenv("REDIS_URL")
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
@@ -167,23 +194,68 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / "static",]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-STORAGES = {
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
+
+if DEBUG:
+    STORAGES = {
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        }
+    }
+else:
+    STORAGES = {
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        }
+    }
+    
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
 
 LOGIN_URL = '/'
-LOGIN_REDIRECT_URL = 'tool_home_info'
+LOGIN_REDIRECT_URL = 'tool_dashboard/'
 
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
 SESSION_EXPIRE_AT_BROWSER_CLOSE=True
 
 
+
+
+# SECURE_HSTS_SECONDS = 31536000  # 1 year
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
+# SECURE_SSL_REDIRECT = True
+
+# SECURE_REFERRER_POLICY = "same-origin"
+# X_FRAME_OPTIONS = "DENY"
+# SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+CACHES = {
+       "default": {
+           "BACKEND": "django_redis.cache.RedisCache",
+           "LOCATION": REDIS_URL,
+           "OPTIONS": {
+               "CLIENT_CLASS": "django_redis.client.DefaultClient",
+               "CONNECTION_POOL_KWARGS": {"ssl_cert_reqs": None},  # only if REDIS_URL is rediss://
+           },
+       }
+   }
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [REDIS_URL],
+        },
+    },
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

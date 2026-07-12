@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+  #scrollLoader {
+    display: none;
+    padding: 18px 0;
+    text-align: center;
+    color: #6b7280;
+    font-size: 0.85rem;
+  }
+
+  #scrollLoader.is-visible {
+    display: block;
+  }
+
+  #noMoreRows {
+    display: none;
+    padding: 14px 0;
+    text-align: center;
+    color: #9ca3af;
+    font-size: 0.8rem;
+  }
+</style>
+
+<!-- toast -->
+
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+    <div id="errorNoteToast"
+         class="toast border-0 shadow-sm"
+         role="alert"
+         aria-live="assertive"
+         aria-atomic="true">
+        <div class="toast-header bg-warning text-dark border-0">
+            <i class="fa-solid fa-circle-exclamation me-2"></i>
+            <strong class="me-auto">Validation Note</strong>
+            <small>1 min</small>
+            <button type="button" class="btn-close ms-2" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+
+        <div class="toast-body">
+            <p class="mb-2 small">
+                Error details are available for review. Please download the invalid rows, correct the fields, and upload the file again.
+            </p>
+
+            <p class="mb-2 small text-danger fw-semibold">
+                Note: When you upload a new file, the previous invalid data will be deleted.
+            </p>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="dashboard-wrapper" style="width:80%; margin:0 auto;">
+
+    <div class="mb-3 text-start">
+        <a href="{% url 'tool_dashboard' %}" class="btn btn-outline-secondary text-white bg-primary mt-4 btn-sm" >
+            <i class="fa-solid fa-arrow-left me-1"></i> Back
+        </a>
+    </div>
+
+    {% if page_obj.paginator.count %}
+    <div class="card border-danger shadow-sm mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center py-2 px-3">
+            <h5 class="mb-0 fs-6 text-danger">
+                <i class="fa-solid fa-triangle-exclamation text-danger me-2"></i>
+                Validation Errors Review
+            </h5>
+
+            <a href="{% url 'download_invalid_excel' %}"
+               class="btn btn-primary btn-sm text-white fw-bold py-1 px-2 ms-2">
+                Download Invalid Rows (Excel)
+            </a>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0 align-middle text-center">
+                    <thead class="table-danger">
+                        <tr>
+                            <th>Row No</th>
+                            <th>Product Code</th>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Cost Price</th>
+                            <th>Selling Price</th>
+                            <th>Expire Date</th>
+                            <th style="min-width:260px; text-align:left;">Error Message</th>
+                        </tr>
+                    </thead>
+                    <tbody id="errorTableBody">
+                        {% include 'invalid_data_rows.html' with errors=page_obj %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="scrollLoader">
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Loading more rows…
+            </div>
+            <div id="noMoreRows">You've reached the end of the list.</div>
+        </div>
+    </div>
+    {% else %}
+     <div class="col-12">
+            <div class="alert alert-info text-center">No Error Records</div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const toastEl = document.getElementById('errorNoteToast');
+    if (toastEl) {
+        // base.html globally re-initializes every ".toast" on the page with its own
+        // 3s autohide timer, which would otherwise cut this warning short. Manage
+        // autohide ourselves and re-show if that global handler hides it early.
+        const toast = new bootstrap.Toast(toastEl, { autohide: false });
+        toast.show();
+
+        const VISIBLE_MS = 90000;
+        const hideAt = Date.now() + VISIBLE_MS;
+
+        toastEl.addEventListener('hidden.bs.toast', function () {
+            if (Date.now() < hideAt) {
+                toast.show();
+            }
+        });
+
+        setTimeout(function () {
+            toast.hide();
+        }, VISIBLE_MS);
+    }
+
+    const tbody = document.getElementById("errorTableBody");
+    if (!tbody) return; // no table on this render (empty state)
+
+    const loader = document.getElementById("scrollLoader");
+    const noMore = document.getElementById("noMoreRows");
+
+    let currentPage = 1;
+    let hasNext = {{ page_obj.has_next|yesno:"true,false" }};
+    let loading = false;
+
+    if (!hasNext) {
+        noMore.style.display = "block";
+    }
+
+    function loadNextPage() {
+        if (loading || !hasNext) return;
+        loading = true;
+        loader.classList.add("is-visible");
+
+        const nextPage = currentPage + 1;
+        fetch(`?page=${nextPage}`, {
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+        })
+            .then(function (res) {
+                if (!res.ok) throw new Error("Request failed");
+                return res.json();
+            })
+            .then(function (data) {
+                tbody.insertAdjacentHTML("beforeend", data.html);
+                currentPage = nextPage;
+                hasNext = data.has_next;
+                if (!hasNext) {
+                    noMore.style.display = "block";
+                }
+            })
+            .catch(function () {
+                // Fail quietly and let the next scroll event retry.
+            })
+            .finally(function () {
+                loading = false;
+                loader.classList.remove("is-visible");
+            });
+    }
+
+    function isNearBottom() {
+        return (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 400);
+    }
+
+    window.addEventListener("scroll", function () {
+        if (isNearBottom()) {
+            loadNextPage();
+        }
+    });
+});
+</script>
+
+{% endblock %}

@@ -9,6 +9,7 @@
 
 }
 
+
 .profile-circle{
 
     width:45px;
@@ -157,4 +158,35 @@
 
 .pagination {
     gap: 6px;
+}
+
+/* toast*/
+ #errorNoteToast {
+        width: 340px;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    #errorNoteToast .toast-header {
+        padding: 0.7rem 0.9rem;
+        font-size: 0.92rem;
+    }
+
+    #errorNoteToast .toast-body {
+        padding: 0.9rem;
+    }
+
+    #errorNoteToast .btn-primary {
+        font-size: 0.82rem;
+        padding: 0.38rem 0.75rem;
+        border-radius: 8px;
+    }
+
+[data-bs-theme="dark"] .dropdown-item:hover {
+    background: rgba(255, 255, 255, .08);
+}
+
+[data-bs-theme="dark"] .pagination .page-item.disabled .page-link {
+    background: #1e293b;
+    color: #64748b;
 }

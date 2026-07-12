@@ -1,219 +1,573 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-{% if messages %}
-    {% for message in messages %}
-        {% if message.tags == 'error' %}
-            <div class="alert alert-danger">{{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
 
-        {% else %}
-            <div class="alert alert-success alert-dismissible fade show">{{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
+<link rel="stylesheet" href="{% static 'css/dash.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-        {% endif %}
-    {% endfor %}
+<!-- toast -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+    {% if messages %}
+        {% for message in messages %}
+        <div class="toast align-items-center border-0 shadow
+                    {% if message.tags == 'success' %}text-bg-success
+                    {% elif message.tags == 'error' %}text-bg-danger
+                    {% elif message.tags == 'warning' %}text-bg-warning
+                    {% else %}text-bg-info{% endif %}"
+             role="alert" aria-live="assertive" aria-atomic="true"
+             data-bs-delay="4000" data-bs-autohide="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    {{ message }}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+        {% endfor %}
     {% endif %}
+</div>
 
-<div class="dash_box d-flex flex-wrap gap-2 p-4">
-  {% if page_obj %}
-    {% for i in page_obj %}
-   
-        <div class="card" style="width: 18rem;">
+
+
+
+    
+<div class="row g-3 p-2">
+    <div class="col-3 col-md-4">
+        <div class="card stat-card stat-card-compact products-card h-100">
             <div class="card-body">
+                <div class="stat-label">Products</div>
+                <h4 class="stat-value">{{ page_obj.paginator.count }}</h4>
+            </div>
+        </div>
+    </div>
 
-                <h5 class="card-title">{{ i.product_name }}</h5>
-                <h6 class="text-muted">{{ i.product_code }}</h6>
+    <div class="col-6 col-md-4">
+        <div class="card stat-card stat-card-compact success-card h-100">
+            <div class="card-body">
+                <div class="stat-label">Success</div>
+                <h4 class="stat-value text-success">{{ summary.success_count }}</h4>
+            </div>
+        </div>
+    </div>
 
-                <p class="card-text">
-                    {{ i.description }}
-                </p>
+    <div class="col-6 col-md-4">
+        <div class="card stat-card stat-card-compact failed-card h-100">
+            <div class="card-body">
+                <div class="stat-label">Failed</div>
+                <h4 class="stat-value text-danger">{{ summary.failed_count }}</h4>
+            </div>
+        </div>
+    </div>
 
-                <p>
-                    <strong>Category:</strong> {{ i.item_category }}
-                </p>
+    <!-- <div class="col-6 col-md-3">
+        <div class="card stat-card stat-card-compact error-card h-100">
+            <div class="card-body">
+                <div class="stat-label">Errors</div>
+                <h4 class="stat-value text-warning">{{ summary.invalid_rows|length}}</h4>
+            </div>
+        </div>
+    </div> -->
+</div>
 
-                <p>
-                    <strong>Cost Price:</strong> ₹{{ i.cost_price }}
-                </p>
 
-                <p>
-                    <strong>Selling Price:</strong> ₹{{ i.selling_price }}
-                </p>
+    <div class="products-toolbar mb-2 p-2">
+        <div class="toolbar-left ms-2">
+            <h4 class="section-title mb-1 text-primary ">Products</h4>
+            <p class="text-muted mb-0 small">Manage, search, filter, update and review product records.</p>
+        </div>
 
-                <p>
-                    <strong>Quantity:</strong> {{ i.quantity }}
-                </p>
+        <div class="toolbar-menu">
+            <button type="button" class="toolbar-menu-item toolbar-menu-item-upload" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>Upload</span>
+            </button>
+            <a href="{% url 'upload_data_error' %}" class="toolbar-menu-item toolbar-menu-item-danger">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>Invalid Data</span>
+            </a>
+        </div>
+    </div>
 
-                <p>
-                    <strong>Stock:</strong>
-                    {% if i.quantity %}
-                        <span class="badge bg-success">In Stock</span>
-                    {% else %}
-                        <span class="badge bg-danger">Out of Stock</span>
-                    {% endif %}
-                </p>
+    <!-- filter -->
+     <form method="get" id="filterForm" class="products-filter-form" action="{% url 'tool_dashboard' %}">
+            <div class="filter-group">
+                <div class="input-group input-group-sm filter-control">
+                    <span class="input-group-text"><i class="fa-solid fa-barcode"></i></span>
+                    <input type="text" name="product_code" class="form-control" placeholder="Product Code"
+                           value="{{ request.GET.product_code }}">
+                </div>
+            </div>
 
-                <div class="d-flex justify-content-between">
-                    <button class="btn btn-primary btn-sm updateBtn" data-bs-toggle="modal" data-bs-target="#updateModal{{ i.id }}">Update</button>
-                    <a href="{% url 'product_delete' i.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this product?');"> Delete </a>
+            <div class="filter-group">
+                <div class="input-group input-group-sm filter-control">
+                    <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+                    <input type="text" name="product_name" class="form-control" placeholder="Product Name"
+                           value="{{ request.GET.product_name }}">
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <select name="cost_price" class="form-select form-select-sm filter-control">
+                    <option value="">Cost Price</option>
+                    <option value="500" {% if request.GET.cost_price == "500" %}selected{% endif %}>Below 500</option>
+                    <option value="1000" {% if request.GET.cost_price == "1000" %}selected{% endif %}>Below 1000</option>
+                    <option value="2000" {% if request.GET.cost_price == "2000" %}selected{% endif %}>Below 2000</option>
+                </select>
+            </div>
+
+            <div class="filter-actions">
+                <button type="submit" class="btn btn-primary btn-sm action-btn">
+                    <i class="fa-solid fa-filter me-1"></i>Filter
+                </button>
+                <a href="{% url 'tool_dashboard' %}" class="btn btn-outline-secondary btn-sm action-btn">
+                    <i class="fa-solid fa-rotate-left me-1"></i>Reset
+                </a>
+            </div>
+        </form>
+        <!--  -->
+</div>
+
+    <div class="row g-3 mb-3 p-3">
+        {% if page_obj %}
+            {% for i in page_obj %}
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="card product-card h-100  card shadow">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <h5 class="card-title mb-1">{{ i.product_name }}</h5>
+                                <div class="text-muted small">{{ i.product_code }}</div>
+                            </div>
+
+                            {% if i.quantity %}
+                                <span class="badge rounded-pill bg-success">In Stock</span>
+                            {% else %}
+                                <span class="badge rounded-pill bg-danger">Out</span>
+                            {% endif %}
+                        </div>
+
+                        <p class="card-text text-muted small">{{ i.description }}</p>
+
+                        <div class="mb-2"><strong>Category:</strong> {{ i.item_category }}</div>
+                        <div class="mb-2"><strong>Cost:</strong> ₹{{ i.cost_price }}</div>
+                        <div class="mb-2"><strong>Sale:</strong> ₹{{ i.selling_price }}</div>
+                        <div class="mb-2"><strong>Qty:</strong> {{ i.quantity }}</div>
+
+                        <div class="d-flex gap-2 mt-3">
+                            <button class="btn btn-primary btn-sm flex-fill"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#updateModal{{ i.id }}">
+                                Update
+                            </button>
+
+                            <a href="{% url 'product_delete' i.id %}"
+                               class="btn btn-outline-danger btn-sm flex-fill"
+                               onclick="return confirm('Are you sure you want to delete this product?');">
+                                Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+
+            
+
+            <!-- Update modal -->
+
+            {% for i in page_obj %}
+            <div class="modal fade" id="updateModal{{ i.id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content border-0 shadow">
+                        <form id="updateForm{{ i.id }}" class="update-product-form" method="POST" action="{% url 'product_update' i.id %}" novalidate>
+                            {% csrf_token %}
+
+                            <div class="modal-header update-modal-header">
+                                <div>
+                                    <h5 class="modal-title fw-bold mb-0">Update Product Details</h5>
+                                    <small class="text-muted">{{ i.product_code }}</small>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <div class="modal-body pt-2">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold text-muted small">Product Code</label>
+                                        <input type="text" class="form-control form-control-sm bg-light" name="product_code" value="{{ i.product_code }}" readonly>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Product Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control form-control-sm" name="product_name" value="{{ i.product_name }}" placeholder="Letters only">
+                                        <div class="error"></div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <label class="form-label fw-semibold small">Description <span class="text-muted fw-normal">(optional, max 150)</span></label>
+                                        <input type="text" class="form-control form-control-sm" name="description" value="{{ i.description }}" maxlength="150">
+                                        <div class="error"></div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Item Category <span class="text-muted fw-normal">(optional, max 50)</span></label>
+                                        <input type="text" class="form-control form-control-sm" name="item_category" value="{{ i.item_category }}" maxlength="50">
+                                        <div class="error"></div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Quantity <span class="text-danger">*</span> <span class="text-muted fw-normal">(0 – 5000)</span></label>
+                                        <input type="number" class="form-control form-control-sm" name="quantity" value="{{ i.quantity }}" min="0" max="5000">
+                                        <div class="error"></div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Cost Price <span class="text-danger">*</span> <span class="text-muted fw-normal">(₹0 – ₹1 Cr)</span></label>
+                                        <input type="number" step="0.01" class="form-control form-control-sm" name="cost_price" value="{{ i.cost_price }}" min="0" max="10000000">
+                                        <div class="error"></div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Selling Price <span class="text-danger">*</span> <span class="text-muted fw-normal">(≥ 0)</span></label>
+                                        <input type="number" step="0.01" class="form-control form-control-sm" name="selling_price" value="{{ i.selling_price }}" min="0">
+                                        <div class="error"></div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold small">Expire Date <span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control form-control-sm" name="expire_date" value="{{ i.expire_date|date:'Y-m-d' }}">
+                                        <div class="error"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer update-modal-footer">
+                                <button type="button" class="btn btn-outline-secondary btn-sm px-4" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary btn-sm px-4">
+                                    <i class="fa-solid fa-floppy-disk me-1"></i>Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info text-center">No Products Available</div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="d-flex justify-content-end mb-4">
+        <button type="button" class="magic-btn" data-bs-toggle="modal" data-bs-target="#uploadModal">
+            <i class="fa-solid fa-cloud-arrow-up me-2"></i>Upload Files
+        </button>
+    </div>
+
+    <div class="modal fade" id="uploadModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content upload-modal-content border-0">
+                <div class="modal-header upload-modal-header">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="modal-icon">
+                            <i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title mb-1">Upload Product File</h5>
+                            <small class="text-white-50">Select an Excel or CSV file to import products</small>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
 
+                <div class="modal-body p-4 p-md-5">
+                    <div class="row g-4">
+                        <div class="col-md-7">
+                            <form method="POST" enctype="multipart/form-data" action="{% url 'tool_upload_info' %}" id="uploadForm">
+                                {% csrf_token %}
+
+                                <div class="drop-zone-modal" id="dropZone">
+                                    <div class="drop-zone-icon">
+                                        <i class="fa-solid fa-file-arrow-up"></i>
+                                    </div>
+                                    <h5 class="mb-2">Drag & Drop your file here</h5>
+                                    <p class="text-muted mb-3">or click below to browse</p>
+
+                                    <input class="d-none" type="file" name="file" id="fileInput" accept=".xlsx,.xls,.csv">
+
+                                    <button type="button" class="btn btn-outline-primary px-4" id="chooseFileBtn">
+                                        <i class="fa-solid fa-folder-open me-2"></i>Choose File
+                                    </button>
+
+                                    <div class="selected-file mt-3" id="fileInfo">No file selected</div>
+                                </div>
+
+                                <div class="d-flex gap-2 flex-wrap mt-4">
+                                    <button type="submit" class="btn btn-success px-4" id="uploadBtn">
+                                        <i class="fa-solid fa-upload me-2"></i>Upload Now
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary px-4" id="clearBtn">
+                                        <i class="fa-solid fa-rotate-left me-2"></i>Clear
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="col-md-5">
+                            <div class="upload-side-card">
+                                <h6 class="fw-bold mb-3">File Guidelines</h6>
+                                <ul class="upload-list">
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i>Use .xlsx, .xls or .csv</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i>Keep required columns ready</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i>Prefer the template file</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i>Check duplicates before upload</li>
+                                </ul>
+
+                                <a href="{% url 'temp_excel' %}" class="btn btn-light w-100 mt-3 text-primary border border-black">
+                                    <i class="fa-solid fa-file-arrow-down me-2 "></i>Download Template
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-<div class="modal fade" id="updateModal{{ i.id }}" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-      <form method="POST" class="product-update-form" enctype="multipart/form-data" novalidate action="{% url 'product_update' i.id %}">
-        {% csrf_token %}
-
-        <div class="modal-header">
-          <h5 class="modal-title">Update Product Details</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-
-        <div class="modal-body">
-
-          <div class="mb-2">
-            <label for="" >Product Code</label>
-            <input type="text" class="form-control" name="product_code" value="{{i.product_code}}" disabled >
-            <div class="invalid-feedback"></div>
-          </div>
-
-           <div class="mb-2">
-            <label>Product Name</label>
-            <input type="text" class="form-control" name="product_name" value="{{i.product_name}}">
-            <div class="invalid-feedback"></div>
-          </div>
-
-          <div class="mb-2">
-            <label>Description</label>
-            <input type="text" class="form-control" name="description" value="{{i.description}}">
-            <div class="invalid-feedback"></div>
-          </div>
-
-           <div class="mb-2">
-            <label>Item_category</label>
-            <input type="text" class="form-control" name="item_category" value="{{i.item_category}}">
-            <div class="invalid-feedback"></div>
-          </div>
-
-          <div class="mb-2">
-            <label>Actual Price</label>
-            <input type="number" class="form-control" step="0.01" name="cost_price" value="{{i.cost_price}}">
-            <div class="invalid-feedback"></div>
-          </div>
-
-           <div class="mb-2">
-            <label>Selling Price</label>
-            <input type="number" class="form-control" step="0.01" name="selling_price" value="{{i.selling_price}}">
-            <div class="invalid-feedback"></div>
-          </div>
-
-          <div class="mb-2">
-            <label>Quantity</label>
-            <input type="number" class="form-control" step="1" name="quantity" value="{{i.quantity}}">
-            <div class="invalid-feedback"></div>
-          </div>
-           <div class="mb-2">
-            <label>Expire Date</label>
-            <input type="date" class="form-control" name="expire_date" value="{{i.expire_date}}">
-            <div class="invalid-feedback"></div>
-          </div>
-
-
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-            Close
-          </button>
-          <button type="submit" class="btn btn-primary">
-            Save Changes
-          </button>
-        </div>
-
-      </form>
-
     </div>
-  </div>
-</div>
 
-      {% endfor %}
-    {% else %}
-        <h4>No Products Available</h4>
+    <nav class="d-flex justify-content-center mt-4">
+        <ul class="pagination shadow-sm">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if request.GET.product_code %}&product_code={{ request.GET.product_code }}{% endif %}{% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}{% if request.GET.cost_price %}&cost_price={{ request.GET.cost_price }}{% endif %}">&laquo; First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.product_code %}&product_code={{ request.GET.product_code }}{% endif %}{% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}{% if request.GET.cost_price %}&cost_price={{ request.GET.cost_price }}{% endif %}">&lsaquo; Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">&laquo; First</span></li>
+                <li class="page-item disabled"><span class="page-link">&lsaquo; Previous</span></li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% elif num >= page_obj.number|add:"-2" and num <= page_obj.number|add:"2" %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}{% if request.GET.product_code %}&product_code={{ request.GET.product_code }}{% endif %}{% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}{% if request.GET.cost_price %}&cost_price={{ request.GET.cost_price }}{% endif %}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.product_code %}&product_code={{ request.GET.product_code }}{% endif %}{% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}{% if request.GET.cost_price %}&cost_price={{ request.GET.cost_price }}{% endif %}">Next &rsaquo;</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.product_code %}&product_code={{ request.GET.product_code }}{% endif %}{% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}{% if request.GET.cost_price %}&cost_price={{ request.GET.cost_price }}{% endif %}">Last &raquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Next &rsaquo;</span></li>
+                <li class="page-item disabled"><span class="page-link">Last &raquo;</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    {% if page_obj %}
+    <div class="text-center mt-2 text-muted">
+        Showing page <strong>{{ page_obj.number }}</strong> of <strong>{{ page_obj.paginator.num_pages }}</strong>
+    </div>
     {% endif %}
 </div>
 
-<nav class="d-flex justify-content-center mt-4">
-    <ul class="pagination shadow-sm">
+<script>
 
-        {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page=1">
-                    &laquo; First
-                </a>
-            </li>
 
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
-                    &lsaquo; Previous
-                </a>
-            </li>
-        {% else %}
-            <li class="page-item disabled">
-                <span class="page-link">&laquo; First</span>
-            </li>
+document.addEventListener("DOMContentLoaded", function () {
+    const filterForm = document.getElementById("filterForm");
+    // const filterInputs = document.querySelectorAll("#filterForm input, #filterForm select");
+    // filterInputs.forEach(function (el) {
+    // el.addEventListener("change", function () { filterForm.submit(); });
+    // el.addEventListener("keyup", function () { filterForm.submit(); });
+    //  });
 
-            <li class="page-item disabled">
-                <span class="page-link">&lsaquo; Previous</span>
-            </li>
-        {% endif %}
+    const fileInput = document.getElementById("fileInput");
+    const chooseFileBtn = document.getElementById("chooseFileBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const fileInfo = document.getElementById("fileInfo");
+    const dropZone = document.getElementById("dropZone");
 
-        {% for num in page_obj.paginator.page_range %}
-            {% if page_obj.number == num %}
-                <li class="page-item active">
-                    <span class="page-link">{{ num }}</span>
-                </li>
-            {% elif num >= page_obj.number|add:"-2" and num <= page_obj.number|add:"2" %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                </li>
-            {% endif %}
-        {% endfor %}
+    if (chooseFileBtn && fileInput) {
+        chooseFileBtn.addEventListener("click", function () { fileInput.click(); });
+    }
 
-        {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}">
-                    Next &rsaquo;
-                </a>
-            </li>
+    if (fileInput && fileInfo) {
+        fileInput.addEventListener("change", function () {
+            fileInfo.textContent = fileInput.files.length > 0 ? fileInput.files[0].name : "No file selected";
+        });
+    }
 
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
-                    Last &raquo;
-                </a>
-            </li>
-        {% else %}
-            <li class="page-item disabled">
-                <span class="page-link">Next &rsaquo;</span>
-            </li>
+    if (clearBtn && fileInput && fileInfo) {
+        clearBtn.addEventListener("click", function () {
+            fileInput.value = "";
+            fileInfo.textContent = "No file selected";
+        });
+    }
 
-            <li class="page-item disabled">
-                <span class="page-link">Last &raquo;</span>
-            </li>
-        {% endif %}
+    if (dropZone && fileInput && fileInfo) {
+        dropZone.addEventListener("dragover", function (e) {
+            e.preventDefault();
+            dropZone.classList.add("dragover");
+        });
+        dropZone.addEventListener("dragleave", function () {
+            dropZone.classList.remove("dragover");
+        });
+        dropZone.addEventListener("drop", function (e) {
+            e.preventDefault();
+            dropZone.classList.remove("dragover");
+            if (e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                fileInfo.textContent = e.dataTransfer.files[0].name;
+            }
+        });
+    }
 
-    </ul>
-</nav>
+    function stripDateTime(input) {
+        if (input && input.value) input.value = input.value.split(' ')[0].trim();
+    }
 
-<div class="text-center mt-2 text-muted">
-    Showing page <strong>{{ page_obj.number }}</strong> of
-    <strong>{{ page_obj.paginator.num_pages }}</strong>
-</div>
+    function setFieldError(input, msg) {
+        if (!input) return;
+        input.classList.add("input-error");
+        const errDiv = input.nextElementSibling;
+        if (errDiv && errDiv.classList.contains("error")) {
+            errDiv.textContent = msg;
+            errDiv.style.display = "block";
+        }
+    }
+
+    function clearFieldError(input) {
+        if (!input) return;
+        input.classList.remove("input-error");
+        const errDiv = input.nextElementSibling;
+        if (errDiv && errDiv.classList.contains("error")) {
+            errDiv.textContent = "";
+            errDiv.style.display = "none";
+        }
+    }
+
+    function validateUpdateForm(form) {
+        const nameInput = form.querySelector('[name="product_name"]');
+        const descInput = form.querySelector('[name="description"]');
+        const catInput = form.querySelector('[name="item_category"]');
+        const qtyInput = form.querySelector('[name="quantity"]');
+        const costInput = form.querySelector('[name="cost_price"]');
+        const sellInput = form.querySelector('[name="selling_price"]');
+        const expInput = form.querySelector('[name="expire_date"]');
+
+        stripDateTime(expInput);
+        [nameInput, descInput, catInput, qtyInput, costInput, sellInput, expInput].forEach(clearFieldError);
+
+        let hasError = false;
+
+        const name = nameInput ? nameInput.value.trim() : "";
+        if (!name) {
+            setFieldError(nameInput, "Product Name is required.");
+            hasError = true;
+        } else if (!/^[A-Za-z][A-Za-z0-9\s]*$/.test(name)) {
+        setFieldError(nameInput, "Must start with a letter; letters and numbers only.");
+        hasError = true;
+        }
+
+        const desc = descInput ? descInput.value.trim() : "";
+        if (desc.length > 150) {
+            setFieldError(descInput, "Description cannot exceed 150 characters.");
+            hasError = true;
+        }
+
+        const cat = catInput ? catInput.value.trim() : "";
+        if (cat.length > 150) {
+            setFieldError(catInput, "Item Category cannot exceed 150 characters.");
+            hasError = true;
+        }
+
+        const qty = qtyInput ? qtyInput.value.trim() : "";
+        if (qty === "") {
+            setFieldError(qtyInput, "Quantity is required.");
+            hasError = true;
+        } else {
+            const qtyNum = Number(qty);
+            if (!Number.isInteger(qtyNum) || qtyNum < 0) {
+                setFieldError(qtyInput, "Must be a non-negative whole number.");
+                hasError = true;
+            } else if (qtyNum > 5000) {
+                setFieldError(qtyInput, "Quantity cannot exceed 5,000.");
+                hasError = true;
+            }
+        }
+
+        const cost = costInput ? costInput.value.trim() : "";
+        if(cost){
+            const costNum = parseFloat(cost);
+            if (isNaN(costNum) || costNum <= 0) {
+                setFieldError(costInput, "Must be a non-negative number.");
+                hasError = true;
+            } else if (costNum > 10000000) {
+                setFieldError(costInput, "Cannot exceed ₹1 Crore (₹1,00,00,000).");
+                hasError = true;
+            }
+        }
+
+        const sell = sellInput ? sellInput.value.trim() : "";
+        if (sell === "") {
+            setFieldError(sellInput, "Selling Price is required.");
+            hasError = true;
+        } else if (isNaN(parseFloat(sell)) || parseFloat(sell) < 0) {
+            setFieldError(sellInput, "Must be a non-negative number.");
+            hasError = true;
+        }
+
+         const exp = expInput ? expInput.value.trim() : "";
+        if (!exp) {
+            setFieldError(expInput, "Expire Date is required.");
+            hasError = true;
+        } else {
+            const expDate = new Date(exp + "T00:00:00");
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+        if (expDate < today) {
+            setFieldError(expInput, "Expire Date must not be in the past.");
+            hasError = true;
+        }
+    }
+
+        return hasError;
+    }
+
+    document.querySelectorAll(".update-product-form").forEach(function (form) {
+        const modalEl = form.closest(".modal");
+        if (modalEl) {
+            modalEl.addEventListener("shown.bs.modal", function () {
+                stripDateTime(form.querySelector('[name="expire_date"]'));
+                form.querySelectorAll(".input-error").forEach(clearFieldError);
+            });
+        }
+
+        form.querySelectorAll("input").forEach(function (input) {
+            input.addEventListener("input", function () { clearFieldError(input); });
+        });
+
+        form.addEventListener("submit", function (e) {
+            if (validateUpdateForm(form)) {
+                e.preventDefault();
+                const firstBad = form.querySelector(".input-error");
+                if (firstBad) firstBad.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        });
+    });
+});
+
+</script>
 
 {% endblock %}

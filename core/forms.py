@@ -9,11 +9,18 @@ from .models import *
 
 
 class CustomUserForm(UserCreationForm):
+    full_name = forms.CharField(required=True)
     email = forms.EmailField(required=True)
 
     class Meta:
         model = User
-        fields = ["email", "password1", "password2"]
+        fields = ["full_name", "email", "password1", "password2"]
+
+    def clean_full_name(self):
+        full_name = self.cleaned_data.get("full_name", "").strip()
+        if not re.match(r'^[A-Za-z ]+$', full_name):
+            raise forms.ValidationError("Full name must contain letters and spaces only.")
+        return full_name
 
     def clean_email(self):
         email = self.cleaned_data["email"].lower()
@@ -21,12 +28,19 @@ class CustomUserForm(UserCreationForm):
 
         if domain not in settings.ALLOWED_EMAIL_DOMAINS:
             raise forms.ValidationError("Please use your company email.")
-
         return email
+
+    def clean_password1(self):
+        password = self.cleaned_data.get("password1")
+        if password and len(password) < 6:
+            raise forms.ValidationError("Password must be at least 6 characters long.")
+        return password
 
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data["email"]
+        # store full_name in first_name for now
+        user.first_name = self.cleaned_data.get("full_name", "")
         user.username = user.email.split("@")[0]
 
         if commit:
@@ -46,6 +60,7 @@ class FormValidate(forms.ModelForm):
             "cost_price",
             "selling_price",
             "quantity",
+            "expire_date",
         ]
 
     def clean_product_code(self):
@@ -57,26 +72,26 @@ class FormValidate(forms.ModelForm):
     def clean_product_name(self):
         name = self.cleaned_data.get("product_name", "").strip()
         if not re.search(r"[A-Za-z]", name):
-            raise forms.ValidationError("Product Name must contain letters, not just numbers.")
+            raise forms.ValidationError("Product Name must contain letters.")
         return name
-
-    def clean_description(self):
-        description = self.cleaned_data.get("description", "").strip()
-        if not re.search(r"[A-Za-z]", description):
-            raise forms.ValidationError("Description must contain letters, not just numbers.")
-        return description
 
     def clean_quantity(self):
         qty = self.cleaned_data["quantity"]
-        if qty < 0:
+        if qty is not None and qty < 0:
             raise forms.ValidationError("Quantity must be greater than or equal to 0.")
         return qty
 
     def clean_cost_price(self):
         cost = self.cleaned_data["cost_price"]
-        if cost < 0:
+        if cost is not None and cost < 0:
             raise forms.ValidationError("Cost Price cannot be negative.")
         return cost
+
+    def clean_expire_date(self):
+        expire_date = self.cleaned_data.get("expire_date")
+        if expire_date and expire_date < datetime.date.today():
+            raise forms.ValidationError("Expire Date must not be in the past.")
+        return expire_date
 
     def clean(self):
         cleaned_data = super().clean()

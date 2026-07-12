@@ -1,7 +1,147 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container">
-    <h4>Error on 404 </h4>
-</div>
+
+<style>
+  .error-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8fafc, #eef4ff);
+    padding: 40px 16px;
+  }
+
+  .error-card {
+    max-width: 700px;
+    width: 100%;
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 48px 32px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+    border: 1px solid #e5e7eb;
+  }
+
+  .error-code {
+    font-size: 5rem;
+    font-weight: 800;
+    line-height: 1;
+    color: #f59e0b;
+    margin-bottom: 12px;
+  }
+
+  .error-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 12px;
+  }
+
+  .error-text {
+    font-size: 1rem;
+    color: #6b7280;
+    max-width: 520px;
+    margin: 0 auto 28px;
+  }
+
+  .error-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .error-actions a {
+    min-width: 160px;
+    border-radius: 12px;
+    padding: 12px 18px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .btn-home {
+    background: #0d6efd;
+    color: #fff;
+  }
+
+  .btn-home:hover {
+    background: #0b5ed7;
+    color: #fff;
+  }
+
+  .btn-login {
+    background: #f3f4f6;
+    color: #111827;
+    border: 1px solid #d1d5db;
+  }
+
+  .btn-login:hover {
+    background: #e5e7eb;
+    color: #111827;
+  }
+
+  @media (max-width: 576px) {
+    .error-card {
+      padding: 36px 20px;
+      border-radius: 18px;
+    }
+
+    .error-code {
+      font-size: 4rem;
+    }
+
+    .error-title {
+      font-size: 1.5rem;
+    }
+
+    .error-actions a {
+      width: 100%;
+    }
+  }
+
+  [data-bs-theme="dark"] .error-page {
+    background: linear-gradient(135deg, #0b1220, #111827);
+  }
+
+  [data-bs-theme="dark"] .error-card {
+    background: #131a2e;
+    border-color: #2a3350;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  }
+
+  [data-bs-theme="dark"] .error-title {
+    color: #e2e8f0;
+  }
+
+  [data-bs-theme="dark"] .error-text {
+    color: #94a3b8;
+  }
+
+  [data-bs-theme="dark"] .btn-login {
+    background: #1a2138;
+    color: #e2e8f0;
+    border-color: #2a3350;
+  }
+
+  [data-bs-theme="dark"] .btn-login:hover {
+    background: #202a47;
+    color: #e2e8f0;
+  }
+</style>
+
+<section class="error-page">
+  <div class="error-card">
+    <div class="error-code">404</div>
+    <h1 class="error-title">Page Not Found</h1>
+    <p class="error-text">
+      The page you are looking for does not exist, may have been moved, or the link may be incorrect.
+    </p>
+
+    <div class="error-actions">
+      <a href="{% url 'tool_home_info' %}" class="btn-home">Go to Home</a>
+      <a href="{% url 'tool_login_info' %}" class="btn-login">Back to Login</a>
+    </div>
+  </div>
+</section>
 
 {% endblock %}

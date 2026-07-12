@@ -1,78 +1,641 @@
 {% extends 'base.html' %}
-{% load static %}
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/signup.css' %}">
-<div class="signup-wrapper">
 
-    <div class="signup_box">
+<style>
+  :root {
+    --bs-primary: #2F5CFF;
+    --bs-primary-rgb: 47, 92, 255;
+    --primary-dark: #1E40D6;
+    --primary-soft: #EEF2FF;
+    --success: #16A34A;
+    --danger: #DC2626;
+    --ink: #10142A;
+    --muted: #6B7280;
+    --border: #E2E6F0;
+  }
 
-        <div class="signup-header">
-            <h2>Create Account</h2>
-            <p>Join us and start managing your products.</p>
-        </div>
+  html, body {
+    height: 100%;
+  }
 
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
+  .signup-page {
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2vh 16px;
+    background:
+      radial-gradient(1100px 520px at 12% -8%, rgba(47, 92, 255, 0.10), transparent 60%),
+      radial-gradient(900px 500px at 105% 105%, rgba(47, 92, 255, 0.08), transparent 55%),
+      #F7F8FC;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .signup-card {
+    width: 100%;
+    max-width: 440px;
+    max-height: 96vh;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: clamp(16px, 2vh, 22px);
+    box-shadow: 0 24px 60px rgba(16, 20, 42, 0.10), 0 2px 8px rgba(16, 20, 42, 0.04);
+    padding: clamp(20px, 3.4vh, 34px) clamp(20px, 4vw, 30px);
+    scrollbar-width: thin;
+    animation: card-in 0.45s cubic-bezier(.2,.7,.3,1);
+  }
+
+  @keyframes card-in {
+    from { opacity: 0; transform: translateY(10px) scale(0.99); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .signup-brand {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--bs-primary), var(--primary-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.05rem;
+    margin: 0 auto clamp(10px, 1.6vh, 14px);
+    box-shadow: 0 8px 18px rgba(47, 92, 255, 0.28);
+  }
+
+  .signup-title {
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    font-size: clamp(1.2rem, 2.2vh + 0.6rem, 1.5rem);
+    margin-bottom: 2px;
+  }
+
+  .signup-subtitle {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: clamp(14px, 2.4vh, 22px);
+  }
+
+  .field-group {
+    margin-bottom: clamp(10px, 1.7vh, 16px);
+  }
+
+  .form-label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--ink);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .input-group-modern {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    background: #fff;
+    transition: border-color .18s ease, box-shadow .18s ease, transform .12s ease;
+  }
+
+  .input-group-modern:focus-within {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 4px rgba(47, 92, 255, 0.12);
+    transform: translateY(-1px);
+  }
+
+  .input-group-modern.is-valid-field {
+    border-color: var(--success);
+  }
+
+  .input-group-modern.is-invalid-field {
+    border-color: var(--danger);
+  }
+
+  .input-group-modern .field-icon {
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .input-group-modern:focus-within .field-icon {
+    color: var(--bs-primary);
+  }
+
+  .input-group-modern input {
+    border: none;
+    outline: none;
+    background: transparent;
+    flex: 1;
+    min-width: 0;
+    padding: clamp(9px, 1.5vh, 12px) 4px;
+    font-size: 0.94rem;
+    color: var(--ink);
+  }
+
+  .input-group-modern input::placeholder {
+    color: #9CA3AF;
+    font-weight: 400;
+  }
+
+  .field-trailing {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding-right: 8px;
+    flex-shrink: 0;
+  }
+
+  .check-icon {
+    color: var(--success);
+    font-size: 1rem;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    animation: pop-in .22s ease;
+  }
+
+  @keyframes pop-in {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .input-group-modern.is-valid-field .check-icon {
+    display: inline-flex;
+  }
+
+  .toggle-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .15s ease, color .15s ease;
+  }
+
+  .toggle-btn:hover {
+    background: var(--primary-soft);
+    color: var(--bs-primary);
+  }
+
+  .field-error {
+    min-height: 16px;
+    margin-top: 5px;
+    font-size: 0.76rem;
+    line-height: 1.2;
+    color: var(--danger);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .field-error:empty { min-height: 0; margin-top: 0; }
+
+  .field-hint {
+    min-height: 16px;
+    margin-top: 5px;
+    font-size: 0.76rem;
+    color: var(--muted);
+  }
+
+  .auth-btn {
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: clamp(10px, 1.7vh, 13px) 16px;
+    background: linear-gradient(135deg, var(--bs-primary), var(--primary-dark));
+    border: none;
+    box-shadow: 0 10px 22px rgba(47, 92, 255, 0.25);
+    transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+  }
+
+  .auth-btn:active {
+    transform: translateY(1px) scale(0.99);
+    box-shadow: 0 6px 14px rgba(47, 92, 255, 0.22);
+  }
+
+  .auth-btn:hover {
+    filter: brightness(1.04);
+  }
+
+  .auth-footer {
+    text-align: center;
+    margin-top: clamp(12px, 2vh, 18px);
+    color: var(--muted);
+    font-size: 0.86rem;
+  }
+
+  .auth-footer a {
+    color: var(--bs-primary);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .auth-footer a:hover {
+    text-decoration: underline;
+  }
+
+  .otp-banner {
+    background: var(--primary-soft);
+    border: 1px solid rgba(47, 92, 255, 0.18);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    color: var(--primary-dark);
+    margin-bottom: clamp(10px, 1.6vh, 14px);
+  }
+
+  .custom-toast {
+    border-radius: 14px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  @media (max-height: 700px) {
+    .signup-brand { margin-bottom: 6px; }
+    .signup-subtitle { margin-bottom: 10px; }
+  }
+
+  [data-bs-theme="dark"] {
+    --primary-soft: rgba(47, 92, 255, 0.16);
+    --ink: #E7EAF6;
+    --muted: #97A0B8;
+    --border: #262E4A;
+  }
+
+  [data-bs-theme="dark"] .signup-page {
+    background:
+      radial-gradient(1100px 520px at 12% -8%, rgba(47, 92, 255, 0.18), transparent 60%),
+      radial-gradient(900px 500px at 105% 105%, rgba(47, 92, 255, 0.14), transparent 55%),
+      #0B0F1F;
+  }
+
+  [data-bs-theme="dark"] .signup-card {
+    background: #131A2E;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  [data-bs-theme="dark"] .input-group-modern {
+    background: #131A2E;
+  }
+
+  [data-bs-theme="dark"] .input-group-modern input::placeholder {
+    color: #5B6480;
+  }
+
+  [data-bs-theme="dark"] .otp-banner {
+    background: rgba(47, 92, 255, 0.14);
+    color: #C7D2FE;
+  }
+</style>
+<div class="toast-container position-fixed top-0 end-0 p-3 mt-5">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="toast custom-toast align-items-center
+                {% if message.tags == 'error' %}
+                    text-bg-danger
+                {% else %}
+                    text-bg-{{ message.tags }}
+                {% endif %}
+                border-0"
+                role="alert"
+                aria-live="assertive"
+                aria-atomic="true"
+                data-bs-delay="3000"
+                data-bs-autohide="true">
+
+                <div class="d-flex">
+                    <div class="toast-body flex-grow-1">
+                        {{ message }}
+                    </div>
+                    <button type="button"
+                            class="btn-close btn-close-white me-2 m-auto"
+                            data-bs-dismiss="toast"
+                            aria-label="Close"></button>
                 </div>
-            {% endfor %}
-        {% endif %}
 
-        <form method="POST" action="{% url 'tool_signup_info' %}">
-            {% csrf_token %}
-
-            <div class="form-group">
-                <label>Full Name</label>
-                <input
-                    type="text"
-                    name="full_name"
-                    placeholder="Siva Prakash"
-                    required>
             </div>
+        {% endfor %}
+    {% endif %}
+</div>
 
-            <div class="form-group">
-                <label>Email Address</label>
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="example@gmail.com"
-                    required>
-            </div>
-
-            <div class="form-group">
-                <label>Password</label>
-                <input
-                    type="password"
-                    name="password1"
-                    placeholder="Minimum 8 characters"
-                    required>
-            </div>
-
-            <div class="form-group">
-                <label>Confirm Password</label>
-                <input
-                    type="password"
-                    name="password2"
-                    placeholder="Confirm password"
-                    required>
-            </div>
-
-            <button class="signup-btn">
-                Create Account
-            </button>
-
-        </form>
-
-        <div class="login-link">
-            Already have an account?
-            <a href="{% url 'tool_login_info' %}">
-                Login
-            </a>
-        </div>
-
+<section class="signup-page">
+  <div class="signup-card">
+    <div class="text-center">
+      <h3 class="signup-title">Create your account</h3>
+      <p class="signup-subtitle">Join us and start managing your products.</p>
     </div>
 
-</div>
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger py-2">
+        {% for error in form.non_field_errors %}
+          <div>{{ error }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="POST" action="{% url 'tool_signup_info' %}" id="signup_form" novalidate>
+      {% csrf_token %}
+
+      {% if otp_sent %}
+        <div class="otp-banner">
+          <i class="fa-solid fa-circle-info me-1" aria-hidden="true"></i>
+          Your Email is Valid to Receive a code {{ request.session.signup_pending_data.email|default:"your email" }}
+        </div>
+      {% else %}
+
+      <div class="field-group">
+        <label class="form-label" for="id_full_name">Full name</label>
+        <div class="input-group-modern" id="wrap_full_name">
+          <span class="field-icon"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
+          <input type="text"
+                 id="id_full_name"
+                 name="full_name"
+                 placeholder="Siva Prakash"
+                 required
+                 autocomplete="name">
+          <span class="field-trailing">
+            <span class="check-icon"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></span>
+          </span>
+        </div>
+        <div class="field-error" id="err_full_name"></div>
+      </div>
+
+      <div class="field-group">
+        <label class="form-label" for="id_email">Email address</label>
+        <div class="input-group-modern" id="wrap_email">
+          <span class="field-icon"><i class="fa-solid fa-envelope" aria-hidden="true"></i></span>
+          <input type="email"
+                 id="id_email"
+                 name="email"
+                 placeholder="example@gmail.com"
+                 required
+                 autocomplete="email">
+          <span class="field-trailing">
+            <span class="check-icon"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></span>
+          </span>
+        </div>
+        <div class="field-error" id="err_email"></div>
+      </div>
+
+      <div class="field-group">
+        <label class="form-label" for="id_password1">Password</label>
+        <div class="input-group-modern" id="wrap_password1">
+          <span class="field-icon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span>
+          <input type="password"
+                 id="id_password1"
+                 name="password1"
+                 placeholder="Ex: Siva@324."
+                 required
+                 autocomplete="new-password">
+          <span class="field-trailing">
+            <span class="check-icon"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></span>
+            <button class="toggle-btn" type="button" id="togglePassword1" aria-label="Show password">
+              <i class="fa-regular fa-eye" id="toggleIcon1" aria-hidden="true"></i>
+            </button>
+          </span>
+        </div>
+        <div class="field-error" id="err_password1"></div>
+      </div>
+
+      <div class="field-group">
+        <label class="form-label" for="id_password2">Confirm password</label>
+        <div class="input-group-modern" id="wrap_password2">
+          <span class="field-icon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span>
+          <input type="password"
+                 id="id_password2"
+                 name="password2"
+                 placeholder="Re-enter your password"
+                 required
+                 autocomplete="new-password">
+          <span class="field-trailing">
+            <span class="check-icon"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></span>
+            <button class="toggle-btn" type="button" id="togglePassword2" aria-label="Show password">
+              <i class="fa-regular fa-eye" id="toggleIcon2" aria-hidden="true"></i>
+            </button>
+          </span>
+        </div>
+        <div class="field-error" id="err_password2"></div>
+      </div>
+
+      {% endif %}
+
+      {% if otp_sent %}
+      <div class="field-group">
+        <label class="form-label" for="id_otp">Verification code</label>
+        <div class="input-group-modern" id="wrap_otp">
+          <span class="field-icon"><i class="fa-solid fa-key" aria-hidden="true"></i></span>
+          <input type="text"
+                 id="id_otp"
+                 name="otp"
+                 placeholder="Enter 6-digit code"
+                 required
+                 maxlength="6"
+                 inputmode="numeric"
+                 autocomplete="one-time-code">
+          <span class="field-trailing">
+            <span class="check-icon"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></span>
+          </span>
+        </div>
+        <div class="field-error" id="err_otp"></div>
+      </div>
+      <input type="hidden" name="action" value="verify_otp">
+      <button type="submit" class="btn btn-primary w-100 auth-btn text-white mt-2">
+        <i class="fa-solid fa-check me-2" aria-hidden="true"></i>
+        Verify code
+      </button>
+      {% else %}
+      <button type="submit" class="btn btn-primary w-100 auth-btn text-white mt-1">
+        <i class="fa-solid fa-user-plus me-2" aria-hidden="true"></i>
+        Create account
+      </button>
+      {% endif %}
+
+      <div class="auth-footer">
+        Already have an account?
+        <a href="{% url 'tool_login_info' %}">Log in</a>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script>
+  function setupPasswordToggle(buttonId, inputId, iconId) {
+    const toggleBtn = document.getElementById(buttonId);
+    const passwordInput = document.getElementById(inputId);
+    const toggleIcon = document.getElementById(iconId);
+    if (!toggleBtn || !passwordInput || !toggleIcon) return;
+    toggleBtn.addEventListener("click", function () {
+      const isPassword = passwordInput.type === "password";
+      passwordInput.type = isPassword ? "text" : "password";
+      toggleIcon.classList.toggle("fa-eye");
+      toggleIcon.classList.toggle("fa-eye-slash");
+    });
+  }
+  setupPasswordToggle("togglePassword1", "id_password1", "toggleIcon1");
+  setupPasswordToggle("togglePassword2", "id_password2", "toggleIcon2");
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const toastElList = [].slice.call(document.querySelectorAll(".toast"));
+    toastElList.forEach(function (toastEl) {
+      new bootstrap.Toast(toastEl).show();
+    });
+
+    const form = document.getElementById('signup_form');
+    if (!form) return;
+    const allowedDomains = ['@inessconsulting', '@gmail.com'];
+
+    function setState(inputEl, state, message) {
+      const wrap = document.getElementById('wrap_' + inputEl.id.replace('id_', ''));
+      const errEl = document.getElementById('err_' + inputEl.id.replace('id_', ''));
+      if (!wrap) return;
+      wrap.classList.remove('is-valid-field', 'is-invalid-field');
+      if (state === 'valid') {
+        wrap.classList.add('is-valid-field');
+        if (errEl) errEl.textContent = '';
+      } else if (state === 'invalid') {
+        wrap.classList.add('is-invalid-field');
+        if (errEl) errEl.textContent = message || '';
+      } else {
+        if (errEl) errEl.textContent = '';
+      }
+    }
+
+    function validateFullName(showError) {
+      const el = document.getElementById('id_full_name');
+      if (!el) return true;
+      const val = el.value.trim();
+      if (!val) {
+        if (showError) setState(el, 'invalid', 'Full name is required.');
+        else setState(el, 'neutral');
+        return false;
+      }
+      if (!/^[A-Za-z ]+$/.test(val)) {
+        setState(el, 'invalid', 'Letters and spaces only.');
+        return false;
+      }
+      setState(el, 'valid');
+      return true;
+    }
+
+    function validateEmail(showError) {
+      const el = document.getElementById('id_email');
+      if (!el) return true;
+      const val = el.value.trim();
+      const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!val) {
+        if (showError) setState(el, 'invalid', 'Email is required.');
+        else setState(el, 'neutral');
+        return false;
+      }
+      if (!pattern.test(val)) {
+        setState(el, 'invalid', 'Enter a valid email address.');
+        return false;
+      }
+      const lowerVal = val.toLowerCase();
+      const isAllowed = allowedDomains.some(function (d) {
+        return lowerVal.includes(d.toLowerCase());
+      });
+      if (!isAllowed) {
+        setState(el, 'invalid', 'Only @gmail.com or @inessconsulting emails are allowed.');
+        return false;
+      }
+      setState(el, 'valid');
+      return true;
+    }
+
+    function validatePassword1(showError) {
+      const el = document.getElementById('id_password1');
+      if (!el) return true;
+      const val = el.value || '';
+      if (!val) {
+        if (showError) setState(el, 'invalid', 'Password is required.');
+        else setState(el, 'neutral');
+        return false;
+      }
+      if (val.length < 6) {
+        setState(el, 'invalid', 'Use at least 6 characters.');
+        return false;
+      }
+      setState(el, 'valid');
+      validatePassword2(false);
+      return true;
+    }
+
+    function validatePassword2(showError) {
+      const el = document.getElementById('id_password2');
+      const p1 = document.getElementById('id_password1');
+      if (!el || !p1) return true;
+      const val = el.value || '';
+      if (!val) {
+        if (showError) setState(el, 'invalid', 'Please confirm your password.');
+        else setState(el, 'neutral');
+        return false;
+      }
+      if (val !== p1.value) {
+        setState(el, 'invalid', 'Passwords do not match.');
+        return false;
+      }
+      setState(el, 'valid');
+      return true;
+    }
+
+    function validateOtp(showError) {
+      const el = document.getElementById('id_otp');
+      if (!el) return true;
+      const val = el.value.trim();
+      if (!val) {
+        if (showError) setState(el, 'invalid', 'Enter the code sent to your email.');
+        else setState(el, 'neutral');
+        return false;
+      }
+      if (!/^\d{6}$/.test(val)) {
+        setState(el, 'invalid', 'Enter the 6-digit code.');
+        return false;
+      }
+      setState(el, 'valid');
+      return true;
+    }
+
+    const bindings = [
+      ['id_full_name', validateFullName],
+      ['id_email', validateEmail],
+      ['id_password1', validatePassword1],
+      ['id_password2', validatePassword2],
+      ['id_otp', validateOtp],
+    ];
+
+    bindings.forEach(function (pair) {
+      const el = document.getElementById(pair[0]);
+      const fn = pair[1];
+      if (!el) return;
+      el.addEventListener('input', function () { fn(false); });
+      el.addEventListener('blur', function () { fn(true); });
+    });
+
+    form.addEventListener('submit', function (e) {
+      const results = bindings
+        .filter(function (pair) { return document.getElementById(pair[0]); })
+        .map(function (pair) { return pair[1](true); });
+
+      const isValid = results.every(Boolean);
+      if (!isValid) {
+        e.preventDefault();
+        return false;
+      }
+    });
+  });
+</script>
 
 {% endblock %}
