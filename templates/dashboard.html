@@ -116,9 +116,9 @@
             </div>
 
             <div class="filter-actions">
-                <button type="submit" class="btn btn-primary btn-sm action-btn">
+                <!-- <button type="submit" class="btn btn-primary btn-sm action-btn">
                     <i class="fa-solid fa-filter me-1"></i>Filter
-                </button>
+                </button> -->
                 <a href="{% url 'tool_dashboard' %}" class="btn btn-outline-secondary btn-sm action-btn">
                     <i class="fa-solid fa-rotate-left me-1"></i>Reset
                 </a>
@@ -386,11 +386,11 @@
 
 document.addEventListener("DOMContentLoaded", function () {
     const filterForm = document.getElementById("filterForm");
-    // const filterInputs = document.querySelectorAll("#filterForm input, #filterForm select");
-    // filterInputs.forEach(function (el) {
-    // el.addEventListener("change", function () { filterForm.submit(); });
-    // el.addEventListener("keyup", function () { filterForm.submit(); });
-    //  });
+    const filterInputs = document.querySelectorAll("#filterForm input, #filterForm select");
+    filterInputs.forEach(function (el) {
+        el.addEventListener("change", function () { filterForm.submit(); });
+        el.addEventListener("keyup", function () { filterForm.submit(); });
+    });
 
     const fileInput = document.getElementById("fileInput");
     const chooseFileBtn = document.getElementById("chooseFileBtn");
