@@ -106,14 +106,7 @@
                 </div>
             </div>
 
-            <div class="filter-group">
-                <select name="cost_price" class="form-select form-select-sm filter-control">
-                    <option value="">Cost Price</option>
-                    <option value="500" {% if request.GET.cost_price == "500" %}selected{% endif %}>Below 500</option>
-                    <option value="1000" {% if request.GET.cost_price == "1000" %}selected{% endif %}>Below 1000</option>
-                    <option value="2000" {% if request.GET.cost_price == "2000" %}selected{% endif %}>Below 2000</option>
-                </select>
-            </div>
+           
 
             <div class="filter-actions">
                 <!-- <button type="submit" class="btn btn-primary btn-sm action-btn">
