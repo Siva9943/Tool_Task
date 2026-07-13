@@ -126,7 +126,10 @@ def validate_row(row, seen_codes, seen_names, existing_codes, existing_names):
         elif not re.fullmatch(r"^[A-Za-z][A-Za-z0-9\s\-\(\)\.\/]*$", product_name):
             errors.append('Product Name must contain only letters')
     if item_category and len(item_category) > 50:
-        errors.append('Item Category must be at most 20 characters')
+        errors.append('Item Category must be at most 50 characters')
+
+    if description and len(description) > 150:
+        errors.append('Description must be at most 150 characters')
 
     quantity = parse_int(row.get('quantity'), 'Quantity', errors)
     if quantity is not None:
@@ -144,6 +147,8 @@ def validate_row(row, seen_codes, seen_names, existing_codes, existing_names):
     if cost_price is not None:
         if cost_price < 0:
             errors.append('Cost Price must be greater than or equal to 0')
+        elif cost_price > 10000000:
+            errors.append('Cost Price must not exceed ₹1,00,00,000')
 
     expire_date = parse_date(row.get('expire_date'), errors)
     if expire_date is not None and expire_date < datetime.date.today():

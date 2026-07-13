@@ -44,8 +44,12 @@ from django.template.loader import render_to_string
  
 User = get_user_model()
 
-# signup 
+# signup
 def signup_user(request):
+    if settings.SERVER_TYPE != settings.PRODUCTION:
+        messages.error(request, "New account registration is disabled in this environment.")
+        return redirect("tool_login_info")
+
     if request.method == "POST":
         action = request.POST.get("action")
 
@@ -425,6 +429,10 @@ class ProductDeleteView(LoginRequiredMixin, View):
         return redirect(f"{reverse_lazy('tool_dashboard')}?page={page}")
 
 
+def help_page(request):
+    return render(request, "help.html")
+
+
 def custom_404(request, exception):
     return render(request, "404.html", status=404)
 
@@ -549,18 +557,31 @@ ROWS_PER_PAGE = 25
  
 @login_required
 def error_data_page(request):
-    errors_qs = InvalidUploadRow.objects.filter(user=request.user).order_by('id').values()
- 
+    errors_qs = InvalidUploadRow.objects.filter(user=request.user).order_by('id')
+
     paginator = Paginator(errors_qs, ROWS_PER_PAGE)
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
+
+    upload_summary = UploadSummary.objects.filter(user=request.user).first()
+
+    summary = {
+        "success_count": upload_summary.success_count if upload_summary else 0,
+        "failed_count": upload_summary.failed_count if upload_summary else 0,
+    }
+
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        html = render_to_string('invalid_data_rows.html', {'errors': page_obj}, request=request)
+        html = render_to_string(
+            'invalid_data_rows.html',
+            {'errors': page_obj},
+            request=request
+        )
         return JsonResponse({
             'html': html,
             'has_next': page_obj.has_next(),
         })
- 
-    return render(request, 'invalid_data.html', {'page_obj': page_obj})
 
-# 
+    return render(request, 'invalid_data.html', {
+        'page_obj': page_obj,
+        'summary': summary,
+    })

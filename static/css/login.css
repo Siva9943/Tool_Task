@@ -108,3 +108,8 @@
     background: #1a2138;
     color: #cbd5e1;
 }
+
+[data-bs-theme="dark"] .auth-card h3,
+[data-bs-theme="dark"] .auth-card .form-label {
+    color: #fff;
+}

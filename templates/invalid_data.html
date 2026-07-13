@@ -2,190 +2,580 @@
 {% block content %}
 
 <style>
-  #scrollLoader {
-    display: none;
-    padding: 18px 0;
-    text-align: center;
-    color: #6b7280;
-    font-size: 0.85rem;
+  :root {
+    --bg: #f5f7fb;
+    --surface: #ffffff;
+    --surface-2: #f8fafc;
+    --border: #e5e7eb;
+    --border-strong: #d1d5db;
+    --text: #111827;
+    --muted: #6b7280;
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --success: #15803d;
+    --success-bg: #ecfdf3;
+    --danger: #dc2626;
+    --danger-bg: #fef2f2;
+    --warning: #b45309;
+    --warning-bg: #fff7ed;
+    --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.04);
+    --shadow-md: 0 10px 30px rgba(16, 24, 40, 0.08);
+    --radius: 16px;
+    --radius-sm: 12px;
+    --row-alt: #fcfcfd;
+    --row-hover: #fafbff;
+    --warning-text: #7c2d12;
+    --warning-text-strong: #9a3412;
+    --warning-icon-bg: #ffedd5;
+    --warning-border: #fed7aa;
+    --table-header-bg: #f8fafc;
   }
 
-  #scrollLoader.is-visible {
-    display: block;
+  :root[data-bs-theme="dark"] {
+    --bg: #0f172a;
+    --surface: #131a2e;
+    --surface-2: #1a2138;
+    --border: #2a3350;
+    --border-strong: #384467;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --primary: #6ea8fe;
+    --primary-hover: #8bb9ff;
+    --success: #4ade80;
+    --success-bg: rgba(74, 222, 128, .12);
+    --danger: #f87171;
+    --danger-bg: rgba(248, 113, 113, .12);
+    --warning: #fbbf24;
+    --warning-bg: rgba(251, 191, 36, .1);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .35);
+    --shadow-md: 0 10px 30px rgba(0, 0, 0, .5);
+    --row-alt: #161d33;
+    --row-hover: #1c2440;
+    --warning-text: #fde68a;
+    --warning-text-strong: #fbbf24;
+    --warning-icon-bg: rgba(251, 191, 36, .18);
+    --warning-border: rgba(251, 191, 36, .3);
+    --table-header-bg: #1a2138;
   }
 
+  body {
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .page-shell {
+    width: min(1180px, 94%);
+    margin: 28px auto 40px;
+  }
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .page-title {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .page-subtitle {
+    margin: .35rem 0 0;
+    color: var(--muted);
+    font-size: .95rem;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: .75rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-modern {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    border-radius: 12px;
+    padding: .72rem 1rem;
+    font-size: .9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all .18s ease;
+    border: 1px solid transparent;
+  }
+
+  .btn-soft {
+    background: var(--surface);
+    color: var(--text);
+    border-color: var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .btn-soft:hover {
+    background: var(--surface-2);
+    color: var(--text);
+  }
+
+  .btn-primary-modern {
+    background: var(--primary);
+    color: #fff;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .btn-primary-modern:hover {
+    background: var(--primary-hover);
+    color: #fff;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .stat-card-modern {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 1rem 1.1rem;
+    transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+  }
+
+  .stat-card-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-strong);
+  }
+
+  .stat-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: .75rem;
+  }
+
+  .stat-label {
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .stat-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: .95rem;
+  }
+
+  .stat-value {
+    margin: 0;
+    font-size: 1.9rem;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--text);
+  }
+
+  .stat-meta {
+    margin-top: .45rem;
+    font-size: .84rem;
+    color: var(--muted);
+  }
+
+  .tone-success .stat-icon {
+    background: var(--success-bg);
+    color: var(--success);
+  }
+
+  .tone-danger .stat-icon {
+    background: var(--danger-bg);
+    color: var(--danger);
+  }
+
+  .note-modern {
+    display: flex;
+    align-items: flex-start;
+    gap: .9rem;
+    background: var(--warning-bg);
+    border: 1px solid var(--warning-border);
+    border-radius: 14px;
+    padding: 1rem 1rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .note-modern .icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--warning-icon-bg);
+    color: var(--warning);
+    flex-shrink: 0;
+  }
+
+  .note-modern .text {
+    color: var(--warning-text);
+    font-size: .92rem;
+    line-height: 1.55;
+  }
+
+  .note-modern .text strong {
+    color: var(--warning-text-strong);
+  }
+
+  .table-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .table-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(to bottom, var(--surface), var(--surface-2));
+    flex-wrap: wrap;
+  }
+
+  .table-title-wrap h5 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .table-title-wrap p {
+    margin: .25rem 0 0;
+    font-size: .86rem;
+    color: var(--muted);
+  }
+
+  .error-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .38rem .65rem;
+    border-radius: 999px;
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--danger);
+    background: var(--danger-bg);
+  }
+
+  #errorTableWrapper table {
+    font-size: .88rem;
+    margin: 0;
+  }
+
+  #errorTableWrapper thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--table-header-bg);
+    color: var(--muted);
+    font-size: .74rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    border-bottom: 1px solid var(--border);
+    padding: .9rem .85rem;
+    white-space: nowrap;
+  }
+
+  #errorTableWrapper tbody td {
+    padding: .9rem .85rem;
+    vertical-align: middle;
+    border-top: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  #errorTableWrapper tbody tr:hover {
+    background: var(--row-hover);
+  }
+
+  #errorTableWrapper tbody tr:nth-child(even) {
+    background: var(--row-alt);
+  }
+
+  #errorTableWrapper .error-message {
+    text-align: left;
+    color: var(--danger);
+    font-weight: 500;
+  }
+
+  .row-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    padding: .3rem .55rem;
+    border-radius: 999px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  #scrollLoader,
   #noMoreRows {
-    display: none;
-    padding: 14px 0;
     text-align: center;
-    color: #9ca3af;
-    font-size: 0.8rem;
+    color: var(--muted);
+    font-size: .86rem;
+    padding: 14px 0 16px;
+  }
+
+  #scrollLoader { display: none; }
+  #scrollLoader.is-visible { display: block; }
+  #noMoreRows { display: none; }
+
+  #serverToastContainer .toast {
+    border-radius: 14px;
+    overflow: hidden;
+    min-width: 320px;
+    box-shadow: var(--shadow-md);
+  }
+
+  @media (max-width: 992px) {
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .page-shell {
+      width: 96%;
+      margin-top: 18px;
+    }
+
+    .page-title {
+      font-size: 1.35rem;
+    }
+
+    .table-card-header {
+      align-items: flex-start;
+    }
   }
 </style>
 
-<!-- toast -->
-
-<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
-    <div id="errorNoteToast"
-         class="toast border-0 shadow-sm"
-         role="alert"
-         aria-live="assertive"
-         aria-atomic="true">
-        <div class="toast-header bg-warning text-dark border-0">
-            <i class="fa-solid fa-circle-exclamation me-2"></i>
-            <strong class="me-auto">Validation Note</strong>
-            <small>1 min</small>
-            <button type="button" class="btn-close ms-2" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-
-        <div class="toast-body">
-            <p class="mb-2 small">
-                Error details are available for review. Please download the invalid rows, correct the fields, and upload the file again.
-            </p>
-
-            <p class="mb-2 small text-danger fw-semibold">
-                Note: When you upload a new file, the previous invalid data will be deleted.
-            </p>
-        </div>
+<div id="serverToastContainer" class="toast-container position-fixed top-0 end-0 p-3" style="z-index:1080;">
+  {% for message in messages %}
+  <div class="toast border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
+    <div class="toast-header
+      {% if message.tags == 'error' or message.tags == 'danger' %}bg-danger text-white
+      {% elif message.tags == 'warning' %}bg-warning text-dark
+      {% elif message.tags == 'success' %}bg-success text-white
+      {% else %}bg-secondary text-white{% endif %} border-0">
+      <i class="fa-solid
+        {% if message.tags == 'error' or message.tags == 'danger' %}fa-circle-xmark
+        {% elif message.tags == 'warning' %}fa-circle-exclamation
+        {% elif message.tags == 'success' %}fa-circle-check
+        {% else %}fa-circle-info{% endif %} me-2"></i>
+      <strong class="me-auto">{{ message.tags|default:"Notice"|title }}</strong>
+      <button type="button" class="btn-close ms-2" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
+    <div class="toast-body small">{{ message }}</div>
+  </div>
+  {% endfor %}
 </div>
 
+<div class="page-shell">
+  <div class="page-header">
+    <div class="d-flex align-items-start gap-3">
+      <a href="{% url 'tool_dashboard' %}" class="btn-modern btn-soft">
+        <i class="fa-solid fa-arrow-left"></i>
+        <span>Back</span>
+      </a>
 
-
-<div class="dashboard-wrapper" style="width:80%; margin:0 auto;">
-
-    <div class="mb-3 text-start">
-        <a href="{% url 'tool_dashboard' %}" class="btn btn-outline-secondary text-white bg-primary mt-4 btn-sm" >
-            <i class="fa-solid fa-arrow-left me-1"></i> Back
-        </a>
+      <div>
+        <h1 class="page-title">Validation Errors Review</h1>
+        <p class="page-subtitle">Review failed rows, correct the fields, and re-upload the file.</p>
+      </div>
     </div>
 
     {% if page_obj.paginator.count %}
-    <div class="card border-danger shadow-sm mb-4">
-        <div class="card-header d-flex justify-content-between align-items-center py-2 px-3">
-            <h5 class="mb-0 fs-6 text-danger">
-                <i class="fa-solid fa-triangle-exclamation text-danger me-2"></i>
-                Validation Errors Review
-            </h5>
-
-            <a href="{% url 'download_invalid_excel' %}"
-               class="btn btn-primary btn-sm text-white fw-bold py-1 px-2 ms-2">
-                Download Invalid Rows (Excel)
-            </a>
-        </div>
-
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover table-striped mb-0 align-middle text-center">
-                    <thead class="table-danger">
-                        <tr>
-                            <th>Row No</th>
-                            <th>Product Code</th>
-                            <th>Product Name</th>
-                            <th>Quantity</th>
-                            <th>Cost Price</th>
-                            <th>Selling Price</th>
-                            <th>Expire Date</th>
-                            <th style="min-width:260px; text-align:left;">Error Message</th>
-                        </tr>
-                    </thead>
-                    <tbody id="errorTableBody">
-                        {% include 'invalid_data_rows.html' with errors=page_obj %}
-                    </tbody>
-                </table>
-            </div>
-
-            <div id="scrollLoader">
-                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                Loading more rows…
-            </div>
-            <div id="noMoreRows">You've reached the end of the list.</div>
-        </div>
-    </div>
-    {% else %}
-     <div class="col-12">
-            <div class="alert alert-info text-center">No Error Records</div>
+    <div class="header-actions">
+      <a href="{% url 'download_invalid_excel' %}" class="btn-modern btn-primary-modern">
+        <i class="fa-solid fa-file-excel"></i>
+        <span>Download Invalid Rows</span>
+      </a>
     </div>
     {% endif %}
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card-modern">
+      <div class="stat-top">
+        <p class="stat-label">Products</p>
+        <span class="stat-icon"><i class="fa-solid fa-box"></i></span>
+      </div>
+      <h3 class="stat-value">{{ page_obj.paginator.count }}</h3>
+      <div class="stat-meta">Total uploaded rows under review</div>
+    </div>
+
+    <div class="stat-card-modern tone-success">
+      <div class="stat-top">
+        <p class="stat-label">Success</p>
+        <span class="stat-icon"><i class="fa-solid fa-circle-check"></i></span>
+      </div>
+      <h3 class="stat-value text-success">{{ summary.success_count }}</h3>
+      <div class="stat-meta">Rows passed validation</div>
+    </div>
+
+    <div class="stat-card-modern tone-danger">
+      <div class="stat-top">
+        <p class="stat-label">Failed</p>
+        <span class="stat-icon"><i class="fa-solid fa-triangle-exclamation"></i></span>
+      </div>
+      <h3 class="stat-value text-danger">{{ summary.failed_count }}</h3>
+      <div class="stat-meta">Rows require correction</div>
+    </div>
+  </div>
+
+  {% if page_obj.paginator.count %}
+  <div class="note-modern" id="validationNote">
+    <div class="icon">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+    </div>
+    <div class="text">
+      <strong>{{ summary.failed_count }} row{{ summary.failed_count|pluralize }} failed validation.</strong>
+      Download the invalid rows, correct the highlighted values, and upload the revised file. Uploading a new file will replace the current invalid-row dataset.
+    </div>
+    <button type="button" class="btn-close ms-auto" aria-label="Close"
+      onclick="document.getElementById('validationNote').style.display='none';"></button>
+  </div>
+
+  <div class="table-card">
+    <div class="table-card-header">
+      <div class="table-title-wrap">
+        <h5>Failed rows</h5>
+        <p>Scroll to inspect each invalid record and its validation issue.</p>
+      </div>
+
+      <span class="error-badge">
+        <i class="fa-solid fa-circle-xmark"></i>
+        {{ summary.failed_count }} issues
+      </span>
+    </div>
+
+    <div id="errorTableWrapper" class="table-responsive">
+      <table class="table align-middle text-center">
+        <thead>
+          <tr>
+            <th>Row No</th>
+            <th>Product Code</th>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Cost Price</th>
+            <th>Selling Price</th>
+            <th>Expire Date</th>
+            <th style="min-width:280px; text-align:left;">Error Message</th>
+          </tr>
+        </thead>
+        <tbody id="errorTableBody">
+          {% include 'invalid_data_rows.html' with errors=page_obj %}
+        </tbody>
+      </table>
+    </div>
+
+    <div id="scrollSentinel" style="height:1px;"></div>
+    <div id="scrollLoader">
+      <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+      Loading more rows…
+    </div>
+    <div id="noMoreRows">You've reached the end of the list.</div>
+  </div>
+  {% else %}
+  <div class="table-card">
+    <div class="p-5 text-center">
+      <div class="mb-2 text-success fs-3">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <h5 class="mb-2">No validation errors</h5>
+      <p class="text-muted mb-0">All rows are valid for this upload.</p>
+    </div>
+  </div>
+  {% endif %}
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const toastEl = document.getElementById('errorNoteToast');
-    if (toastEl) {
-        // base.html globally re-initializes every ".toast" on the page with its own
-        // 3s autohide timer, which would otherwise cut this warning short. Manage
-        // autohide ourselves and re-show if that global handler hides it early.
-        const toast = new bootstrap.Toast(toastEl, { autohide: false });
-        toast.show();
+  document.querySelectorAll('#serverToastContainer .toast').forEach(function (el) {
+    new bootstrap.Toast(el).show();
+  });
 
-        const VISIBLE_MS = 90000;
-        const hideAt = Date.now() + VISIBLE_MS;
+  const tbody = document.getElementById("errorTableBody");
+  if (!tbody) return;
 
-        toastEl.addEventListener('hidden.bs.toast', function () {
-            if (Date.now() < hideAt) {
-                toast.show();
-            }
-        });
+  const loader = document.getElementById("scrollLoader");
+  const noMore = document.getElementById("noMoreRows");
 
-        setTimeout(function () {
-            toast.hide();
-        }, VISIBLE_MS);
-    }
+  let currentPage = 1;
+  let hasNext = {{ page_obj.has_next|lower }};
+  let loading = false;
 
-    const tbody = document.getElementById("errorTableBody");
-    if (!tbody) return; // no table on this render (empty state)
+  if (!hasNext) noMore.style.display = "block";
 
-    const loader = document.getElementById("scrollLoader");
-    const noMore = document.getElementById("noMoreRows");
+  function loadNextPage() {
+    if (loading || !hasNext) return;
 
-    let currentPage = 1;
-    let hasNext = {{ page_obj.has_next|yesno:"true,false" }};
-    let loading = false;
+    loading = true;
+    loader.classList.add("is-visible");
 
-    if (!hasNext) {
-        noMore.style.display = "block";
-    }
+    const nextPage = currentPage + 1;
 
-    function loadNextPage() {
-        if (loading || !hasNext) return;
-        loading = true;
-        loader.classList.add("is-visible");
-
-        const nextPage = currentPage + 1;
-        fetch(`?page=${nextPage}`, {
-            headers: { "X-Requested-With": "XMLHttpRequest" }
-        })
-            .then(function (res) {
-                if (!res.ok) throw new Error("Request failed");
-                return res.json();
-            })
-            .then(function (data) {
-                tbody.insertAdjacentHTML("beforeend", data.html);
-                currentPage = nextPage;
-                hasNext = data.has_next;
-                if (!hasNext) {
-                    noMore.style.display = "block";
-                }
-            })
-            .catch(function () {
-                // Fail quietly and let the next scroll event retry.
-            })
-            .finally(function () {
-                loading = false;
-                loader.classList.remove("is-visible");
-            });
-    }
-
-    function isNearBottom() {
-        return (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 400);
-    }
-
-    window.addEventListener("scroll", function () {
-        if (isNearBottom()) {
-            loadNextPage();
+    fetch(`?page=${nextPage}`, {
+      headers: { "X-Requested-With": "XMLHttpRequest" }
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("Request failed");
+        return res.json();
+      })
+      .then(data => {
+        tbody.insertAdjacentHTML("beforeend", data.html);
+        currentPage = nextPage;
+        hasNext = data.has_next;
+        if (!hasNext) {
+          noMore.style.display = "block";
+          observer.disconnect();
         }
-    });
+      })
+      .catch(() => {})
+      .finally(() => {
+        loading = false;
+        loader.classList.remove("is-visible");
+      });
+  }
+
+  const sentinel = document.getElementById("scrollSentinel");
+  const observer = new IntersectionObserver(function (entries) {
+    if (entries[0].isIntersecting) loadNextPage();
+  }, { rootMargin: "200px" });
+
+  if (hasNext && sentinel) observer.observe(sentinel);
 });
 </script>
 

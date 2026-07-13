@@ -308,20 +308,25 @@
 
                                     </div>
 
-                                    <button class="btn btn-primary w-100 py-2 auth-btn text-white">
-
+                                    <button
+                                    type="submit"
+                                    id="loginBtn"
+                                    class="btn btn-primary w-100 py-2 auth-btn text-white">
+                                    <span id="loginText">
                                         <i class="fa-solid fa-right-to-bracket me-2"></i>
-
                                         Login
+                                    </span>
 
-                                    </button>
+    <span id="loginSpinner" class="d-none">
+        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+        Logging in...
+    </span>
 
+</button>
                                     <div class="text-center mt-4">
-
                                         <span class="text-muted">
                                             Don't have an account?
                                         </span>
-
                                         <a href="{% url 'tool_signup_info' %}"
                                            class="text-success">
 
@@ -379,6 +384,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("login_form");
     const emailEl = document.getElementById("id_email");
     const pwEl = document.getElementById("id_password");
+    const loginBtn = document.getElementById("loginBtn");
+    const loginText = document.getElementById("loginText");
+    const loginSpinner = document.getElementById("loginSpinner");
+
 
     const MIN_PASSWORD_LENGTH = 6;
 
@@ -430,13 +439,20 @@ document.addEventListener("DOMContentLoaded", function () {
     pwEl.addEventListener("blur", function () { validatePassword(true); });
 
     form.addEventListener("submit", function (e) {
-        const emailOk = validateEmail(true);
-        const pwOk = validatePassword(true);
-        if (!emailOk || !pwOk) {
-            e.preventDefault();
-            return false;
-        }
-    });
+
+    const emailOk = validateEmail(true);
+    const pwOk = validatePassword(true);
+
+    if (!emailOk || !pwOk) {
+        e.preventDefault();
+        return false;
+    }
+
+    loginText.classList.add("d-none");
+    loginSpinner.classList.remove("d-none");
+
+    loginBtn.disabled = true;
+});
 
 });
 </script>

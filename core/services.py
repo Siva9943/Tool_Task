@@ -80,7 +80,7 @@ def process_upload_file(user, uploaded_file):
                 "required_status": "Fail" if any("is required" in e or "required" in e.lower() for e in errors) else "Pass",
                 "datatype_status": "Fail" if any("must be a" in e or "format" in e or "must be numeric" in e or "integer" in e for e in errors) else "Pass",
                 "duplicate_status": "Fail" if any("exists in the database" in e or "Duplicate" in e or "already exists" in e for e in errors) else "Pass",
-                "range_status": "Fail" if any(">=" in e or "greater than" in e or "past" in e or "characters" in e or "length" in e for e in errors) else "Pass",
+                "range_status": "Fail" if any(">=" in e or "greater than" in e or "past" in e or "characters" in e or "length" in e or "exceed" in e for e in errors) else "Pass",
             })
             
         else:

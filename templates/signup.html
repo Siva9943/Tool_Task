@@ -247,6 +247,17 @@
     text-decoration: underline;
   }
 
+  .otp-timer {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .otp-timer.is-expired {
+    color: var(--danger);
+  }
+
   .otp-banner {
     background: var(--primary-soft);
     border: 1px solid rgba(47, 92, 255, 0.18);
@@ -433,7 +444,10 @@
 
       {% if otp_sent %}
       <div class="field-group">
-        <label class="form-label" for="id_otp">Verification code</label>
+        <div class="d-flex justify-content-between align-items-center">
+          <label class="form-label mb-0" for="id_otp">Verification code</label>
+          <span class="otp-timer" id="otpTimer" data-seconds="600">10:00</span>
+        </div>
         <div class="input-group-modern" id="wrap_otp">
           <span class="field-icon"><i class="fa-solid fa-key" aria-hidden="true"></i></span>
           <input type="number"
@@ -452,14 +466,40 @@
         <div class="field-error" id="err_otp"></div>
       </div>
       <input type="hidden" name="action" value="verify_otp">
-      <button type="submit" class="btn btn-primary w-100 auth-btn text-white mt-2">
+      <!-- varify otp  -->
+      <button
+    type="submit"
+    id="verifyBtn"
+    class="btn btn-primary w-100 auth-btn text-white mt-2">
+
+    <span id="verifyText">
         <i class="fa-solid fa-check me-2" aria-hidden="true"></i>
         Verify code
-      </button>
+    </span>
+
+    <span id="verifySpinner" class="d-none">
+        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+        Verifying...
+    </span>
+
+</button>
+
       {% else %}
-      <button type="submit" class="btn btn-primary w-100 auth-btn text-white mt-1">
+        <button
+    type="submit"
+    id="registerBtn"
+    class="btn btn-primary w-100 auth-btn text-white mt-1">
+
+    <span id="registerText">
         <i class="fa-solid fa-user-plus me-2" aria-hidden="true"></i>
         Create account
+    </span>
+
+    <span id="registerSpinner" class="d-none">
+        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+        Creating account...
+    </span>
+
       </button>
       {% endif %}
 
@@ -492,6 +532,31 @@
     toastElList.forEach(function (toastEl) {
       new bootstrap.Toast(toastEl).show();
     });
+
+    const otpTimerEl = document.getElementById('otpTimer');
+    if (otpTimerEl) {
+      let secondsLeft = parseInt(otpTimerEl.dataset.seconds, 10) || 600;
+
+      function renderTimer() {
+        const minutes = Math.floor(secondsLeft / 60);
+        const seconds = secondsLeft % 60;
+        otpTimerEl.textContent = minutes + ':' + String(seconds).padStart(2, '0');
+      }
+
+      renderTimer();
+      const otpInterval = setInterval(function () {
+        secondsLeft -= 1;
+        if (secondsLeft <= 0) {
+          secondsLeft = 0;
+          renderTimer();
+          otpTimerEl.textContent = 'Code expired';
+          otpTimerEl.classList.add('is-expired');
+          clearInterval(otpInterval);
+          return;
+        }
+        renderTimer();
+      }, 1000);
+    }
 
     const form = document.getElementById('signup_form');
     if (!form) return;
@@ -626,16 +691,37 @@
     });
 
     form.addEventListener('submit', function (e) {
-      const results = bindings
-        .filter(function (pair) { return document.getElementById(pair[0]); })
-        .map(function (pair) { return pair[1](true); });
+    const results = bindings
+        .filter(function (pair) {
+            return document.getElementById(pair[0]);
+        })
+        .map(function (pair) {
+            return pair[1](true);
+        });
 
-      const isValid = results.every(Boolean);
-      if (!isValid) {
+    const isValid = results.every(Boolean);
+
+    if (!isValid) {
         e.preventDefault();
         return false;
-      }
-    });
+    }
+
+    // Create Account button loading
+    const registerBtn = document.getElementById("registerBtn");
+    if (registerBtn) {
+        document.getElementById("registerText").classList.add("d-none");
+        document.getElementById("registerSpinner").classList.remove("d-none");
+        registerBtn.disabled = true;
+    }
+
+    // Verify Code button loading
+    const verifyBtn = document.getElementById("verifyBtn");
+    if (verifyBtn) {
+        document.getElementById("verifyText").classList.add("d-none");
+        document.getElementById("verifySpinner").classList.remove("d-none");
+        verifyBtn.disabled = true;
+    }
+});
   });
 </script>
 
