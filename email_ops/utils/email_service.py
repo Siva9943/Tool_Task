@@ -18,7 +18,7 @@ def send_email(email_type, to, context=None, cc=None, user_id=None):
         final_to, final_cc = [settings.TEST_EMAIL], []
         print(final_to,"this is development email")
 
-    deliver_email.delay(
+    deliver_email(
         email_type=email_type,
         context=context or {},
         to=final_to,

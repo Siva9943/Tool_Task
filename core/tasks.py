@@ -99,7 +99,7 @@ logger = logging.getLogger("products")
 
 
 
-@shared_task
+# @shared_task
 def deliver_email(email_type, context, to, cc=None, user_id=None):
     try:
         print(to,"this is development email")
