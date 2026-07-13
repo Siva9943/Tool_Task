@@ -8,6 +8,7 @@ from django.core.mail import EmailMessage, get_connection
 
 def send_mail_gmail(to_email, cc_email, subject, message, attachments=None):
     try:
+        print("Creating SMTP connection...")
         connection = get_connection(
             host="smtp.gmail.com",
             port=587,
@@ -29,13 +30,14 @@ def send_mail_gmail(to_email, cc_email, subject, message, attachments=None):
             cc=cc_email or [],
             connection=connection,
         )
-        for filename, content, mimetype in attachments or []:
-            email.attach(filename, content, mimetype)
-        email.send()
         print("HOST:", settings.EMAIL_HOST)
         print("PORT:", settings.EMAIL_PORT)
         print("USER:", settings.EMAIL_HOST_USER)
         print("PASSWORD EXISTS:", bool(settings.EMAIL_HOST_PASSWORD))
+        for filename, content, mimetype in attachments or []:
+            email.attach(filename, content, mimetype)
+        email.send()
+       
         return True
     except Exception as e:
 

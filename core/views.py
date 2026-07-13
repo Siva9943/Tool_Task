@@ -57,8 +57,16 @@ def signup_user(request):
                 request.session.pop("signup_otp", None)
                 request.session.pop("signup_pending_data", None)
                 return redirect("tool_signup_info")
+            attempts = request.session.get("signup_otp_attempts", 0)
+            if attempts >= 5:
+                messages.error(request, "Too many attempts. Please start signup again.")
+                request.session.pop("signup_otp", None)
+                request.session.pop("signup_pending_data", None)
+                request.session.pop("signup_otp_attempts", None)
+                return redirect("tool_signup_info")
 
-            if str(submitted_otp) != str(session_otp):
+            if not hmac.compare_digest(str(submitted_otp), str(session_otp)):
+                request.session["signup_otp_attempts"] = attempts + 1
                 messages.error(request, "Invalid OTP. Please try again.")
                 form = CustomUserForm(initial=pending_data)
                 return render(request, "signup.html", {"form": form, "allowed_domains": settings.ALLOWED_EMAIL_DOMAINS, "otp_sent": True})
@@ -70,44 +78,42 @@ def signup_user(request):
                 messages.error(request, "Username or email already exists.")
                 request.session.pop("signup_otp", None)
                 request.session.pop("signup_pending_data", None)
+                request.session.pop("signup_otp_attempts", None)
                 return redirect("tool_signup_info")
-            
-            user = User.objects.create_user(
-                username=username,
-                email=email,
-                password=pending_data["password1"],
-                first_name=pending_data["full_name"],
-            )
+            form = CustomUserForm(pending_data)
+            if form.is_valid():
+                user = User.objects.create_user(
+                    username=username,
+                    email=email,
+                    password=pending_data["password1"],
+                    first_name=pending_data["full_name"],
+                )
 
-            Email_DB.objects.create(
-                user=user,
-                to_email=user.email,
-                subject="Account Creation Successful",
-                email_status="Pending",
-            )
+                Email_DB.objects.create(
+                    user=user,
+                    to_email=user.email,
+                    subject="Account Creation Successful",
+                    email_status="Pending",
+                )
 
-            subject = "Account Creation Successful"
-            message = f"""
-Hi {user.first_name or user.username},
+                send_email(
+                    email_type="signup",
+                    to=user.email,
+                    context={"user": {"username": user.username, "email": user.email, "first_name": user.first_name}},
+                    user_id=user.id,
+                )
 
-Your account has been created successfully.
-
-Username: {user.username}
-Email: {user.email}
-
-Thank you.
-"""
-
-            send_email(
-                email_type="signup",
-                to=user.email,
-                context={"user": {"username": user.username, "email": user.email, "first_name": user.first_name}},
-                user_id=user.id,)
-
-            request.session.pop("signup_otp", None)
-            request.session.pop("signup_pending_data", None)
-            messages.success(request, "Account created successfully.")
-            return redirect("tool_login_info")
+                request.session.pop("signup_otp", None)
+                request.session.pop("signup_pending_data", None)
+                request.session.pop("signup_otp_attempts", None)
+                messages.success(request, "Account created successfully.")
+                return redirect("tool_login_info")
+            else:
+                messages.error(request, "Something went wrong. Please sign up again.")
+                request.session.pop("signup_otp", None)
+                request.session.pop("signup_pending_data", None)
+                request.session.pop("signup_otp_attempts", None)
+                return redirect("tool_signup_info")
 
         form = CustomUserForm(request.POST)
 
@@ -123,6 +129,7 @@ Thank you.
 
             otp = f"{random.randint(100000, 999999)}"
             request.session["signup_otp"] = otp
+            request.session["signup_otp_attempts"] = 0
             request.session["signup_pending_data"] = {
                 "full_name": form.cleaned_data["full_name"],
                 "email": email,
@@ -147,6 +154,10 @@ Thank you.
 
     form = CustomUserForm()
     return render(request, "signup.html", {"form": form, "allowed_domains": settings.ALLOWED_EMAIL_DOMAINS, "otp_sent": False})
+
+
+
+
 
 # def signup_user(request):
 #     if request.method == "POST":
