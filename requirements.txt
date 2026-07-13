@@ -49,7 +49,7 @@ vine==5.1.0
 wcwidth==0.8.2
 whitenoise==6.12.0
 aiosmtplib==5.1.2
-dj-database-url 
+dj_database_url 
 psycopg2-binary
 requests==2.34.2
 python-dateutil==2.9.0.post0
