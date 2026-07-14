@@ -438,11 +438,11 @@ def custom_500(request):
 
 
 class MyPasswordChange(PasswordChangeView):
-    template_name = 'register/password_change_form.html'
+    template_name = 'registration/password_change_form.html'
     success_url = reverse_lazy('password_change_done')
 
 class MyPasswordChangeDoneView(PasswordChangeDoneView):
-    template_name = 'register/password_change_done.html'
+    template_name = 'registration/password_change_done.html'
 
 
 
