@@ -35,13 +35,11 @@ from django.core.paginator import Paginator
 from django.utils.http import url_has_allowed_host_and_scheme
 import io
 from django.contrib.auth import authenticate, login
-from django.contrib.auth import get_user_model
 import random
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from email_ops.utils.email_service import send_email
-User = get_user_model()
 
 # signup
 def signup_user(request):
@@ -258,7 +256,7 @@ def login_user(request):
             request,
             "Invalid credentials."
         )
-    return render(request,"login.html")
+    return render(request,"registration/login.html")
 
 @login_required
 def logout_user(request):
@@ -381,6 +379,7 @@ def upload_file(request):
     return redirect("tool_dashboard")
 
 
+
 class ProductUpdateView(LoginRequiredMixin, View):
  
     def post(self, request, pk):
@@ -415,6 +414,7 @@ class ProductUpdateView(LoginRequiredMixin, View):
         page = request.GET.get("page", 1)
         return redirect(f"{reverse_lazy('tool_dashboard')}?page={page}")
 
+
 class ProductDeleteView(LoginRequiredMixin, View):
     def get(self, request, pk):
         product = get_object_or_404(Product_info, id=pk)
@@ -446,7 +446,7 @@ class MyPasswordChangeDoneView(PasswordChangeDoneView):
 
 
 
-
+@login_required
 def download_template(request):
     file_path = os.path.join(
         settings.BASE_DIR,

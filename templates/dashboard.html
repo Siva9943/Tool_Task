@@ -305,106 +305,119 @@
             </div>
         </div>
     </div>
-
-    <!-- User Guide modal -->
-    <div class="modal fade" id="userGuideModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-header upload-modal-header">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="modal-icon">
-                            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-                        </div>
-                        <div>
-                            <h5 class="modal-title mb-1">Excel Upload &ndash; User Guide</h5>
-                            <small class="text-white-50">File format, required columns and limitations</small>
-                        </div>
+<!-- User Guide modal -->
+<div class="modal fade pt-7" id="userGuideModal" tabindex="-1" aria-hidden="true" style='z-index: 100000000;'>
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header upload-modal-header">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon">
+                        <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
                     </div>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <div>
+                        <h5 class="modal-title mb-1">Excel Upload &ndash; User Guide</h5>
+                        <small class="text-white-50">File format, required columns and limitations</small>
+                    </div>
                 </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
 
-                <div class="modal-body p-4">
-                    <h6 class="fw-bold mb-2"><i class="fa-solid fa-file-excel text-success me-2"></i>Accepted File Format</h6>
-                    <ul class="upload-list mb-4">
-                        <li><i class="fa-solid fa-circle-check text-success me-2"></i>File types: <strong>.xlsx</strong>, <strong>.xls</strong> or <strong>.csv</strong> only</li>
-                        <li><i class="fa-solid fa-circle-check text-success me-2"></i>First row must contain the exact column headers, in the exact order, shown below</li>
-                        <li><i class="fa-solid fa-circle-check text-success me-2"></i>Columns marked <span class="text-danger fw-semibold">*</span> are mandatory</li>
-                        <li><i class="fa-solid fa-circle-check text-success me-2"></i>Do not add, remove, rename or reorder columns</li>
-                        <li><i class="fa-solid fa-circle-check text-success me-2"></i>Use the <a href="{% url 'temp_excel' %}">Download Template</a> file as a starting point</li>
-                    </ul>
+            <div class="modal-body p-4">
 
-                    <h6 class="fw-bold mb-2"><i class="fa-solid fa-list-check text-primary me-2"></i>Column Rules &amp; Limitations</h6>
-                    <div class="table-responsive">
-                        <table class="table table-sm table-bordered align-middle mb-4">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Column</th>
-                                    <th>Required</th>
-                                    <th>Rules / Limitations</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Product code*</td>
-                                    <td><span class="badge text-bg-danger">Must</span></td>
-                                    <td>Starts with <code>P</code> followed by 4+ digits (e.g. <code>P1001</code>); max 20 characters; must be unique (not already used in file or database)</td>
-                                </tr>
-                                <tr>
-                                    <td>Product name*</td>
-                                    <td><span class="badge text-bg-danger">Must</span></td>
-                                    <td>Must start with a letter; letters, numbers, spaces and <code>- ( ) .</code> only; max 50 characters; must be unique</td>
-                                </tr>
-                                <tr>
-                                    <td>Description</td>
-                                    <td><span class="badge text-bg-secondary">Optional</span></td>
-                                    <td>Max 150 characters</td>
-                                </tr>
-                                <tr>
-                                    <td>Item category</td>
-                                    <td><span class="badge text-bg-secondary">Optional</span></td>
-                                    <td>Max 50 characters</td>
-                                </tr>
-                                <tr>
-                                    <td>Cost price</td>
-                                    <td><span class="badge text-bg-secondary">Optional</span></td>
-                                    <td>Decimal number; ₹0 &ndash; ₹1,00,00,000</td>
-                                </tr>
-                                <tr>
-                                    <td>Selling price*</td>
-                                    <td><span class="badge text-bg-danger">Must</span></td>
-                                    <td>Decimal number; must be &ge; 0</td>
-                                </tr>
-                                <tr>
-                                    <td>Quantity*</td>
-                                    <td><span class="badge text-bg-danger">Must</span></td>
-                                    <td>Whole number only; 0 &ndash; 5000</td>
-                                </tr>
-                                <tr>
-                                    <td>Expire date(YYYY-MM-DD)</td>
-                                    <td><span class="badge text-bg-secondary">Optional</span></td>
-                                    <td>Format <code>YYYY-MM-DD</code>; cannot be a past date</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <!-- Top row: Format + Notes side by side -->
+                <div class="row g-4 mb-3">
+                    <div class="col-md-6">
+                        <h6 class="fw-bold mb-2"><i class="fa-solid fa-file-excel text-success me-2"></i>Accepted File Format</h6>
+                        <ul class="upload-list mb-0 small">
+                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>File types: <strong>.xlsx</strong>, <strong>.xls</strong> or <strong>.csv</strong> only</li>
+                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>First row must contain the exact column headers, in the exact order, shown below</li>
+                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>Columns marked <span class="text-danger fw-semibold">*</span> are mandatory</li>
+                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>Do not add, remove, rename or reorder columns</li>
+                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>Use the <a href="{% url 'temp_excel' %}">Download Template</a> file as a starting point</li>
+                        </ul>
                     </div>
 
-                    <h6 class="fw-bold mb-2"><i class="fa-solid fa-triangle-exclamation text-warning me-2"></i>Notes</h6>
-                    <ul class="upload-list mb-0">
-                        <li><i class="fa-solid fa-circle-check text-success me-2"></i>Rows with duplicate Product Code / Name (within the file or already in the database) are rejected</li>
-                        <li><i class="fa-solid fa-circle-check text-success me-2"></i>Rejected rows are listed on the <a href="{% url 'upload_data_error' %}">Invalid Data</a> page with the reason for failure</li>
-                        <li><i class="fa-solid fa-circle-check text-success me-2"></i>Valid rows are imported even if some other rows in the same file fail</li>
-                    </ul>
+                    <div class="col-md-6 border-start-md ps-md-4">
+                        <h6 class="fw-bold mb-2"><i class="fa-solid fa-triangle-exclamation text-warning me-2"></i>Notes</h6>
+                        <ul class="upload-list mb-0 small">
+                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>Rows with duplicate Product Code / Name (within the file or already in the database) are rejected</li>
+                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>Rejected rows are listed on the <a href="{% url 'upload_data_error' %}">Invalid Data</a> page with the reason for failure</li>
+                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>Valid rows are imported even if some other rows in the same file fail</li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div class="modal-footer">
-                    <a href="{% url 'temp_excel' %}" class="btn btn-outline-primary px-4">
-                        <i class="fa-solid fa-file-arrow-down me-2"></i>Download Template
-                    </a>
-                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Close</button>
+                <hr class="my-3">
+
+                <!-- Column Rules table -->
+                <h6 class="fw-bold mb-2"><i class="fa-solid fa-list-check text-primary me-2"></i>Column Rules &amp; Limitations</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered align-middle mb-0 small">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width:16%;">Column</th>
+                                <th style="width:10%;">Required</th>
+                                <th>Rules / Limitations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Product code*</td>
+                                <td><span class="badge text-bg-danger">Must</span></td>
+                                <td>Starts with <code>P</code> followed by 4+ digits (e.g. <code>P1001</code>); max 20 characters; must be unique (not already used in file or database)</td>
+                            </tr>
+                            <tr>
+                                <td>Product name*</td>
+                                <td><span class="badge text-bg-danger">Must</span></td>
+                                <td>Must start with a letter; letters, numbers, spaces and <code>- ( ) .</code> only; max 50 characters; must be unique</td>
+                            </tr>
+                            <tr>
+                                <td>Description</td>
+                                <td><span class="badge text-bg-secondary">Optional</span></td>
+                                <td>Max 150 characters</td>
+                            </tr>
+                            <tr>
+                                <td>Item category</td>
+                                <td><span class="badge text-bg-secondary">Optional</span></td>
+                                <td>Max 50 characters</td>
+                            </tr>
+                            <tr>
+                                <td>Cost price</td>
+                                <td><span class="badge text-bg-secondary">Optional</span></td>
+                                <td>Decimal number; ₹0 &ndash; ₹1,00,00,000</td>
+                            </tr>
+                            <tr>
+                                <td>Selling price*</td>
+                                <td><span class="badge text-bg-danger">Must</span></td>
+                                <td>Decimal number; must be &ge; 0</td>
+                            </tr>
+                            <tr>
+                                <td>Quantity*</td>
+                                <td><span class="badge text-bg-danger">Must</span></td>
+                                <td>Whole number only; 0 &ndash; 5000</td>
+                            </tr>
+                            <tr>
+                                <td>Expire date(YYYY-MM-DD)</td>
+                                <td><span class="badge text-bg-secondary">Optional</span></td>
+                                <td>Format <code>YYYY-MM-DD</code>; cannot be a past date</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <a href="{% url 'temp_excel' %}" class="btn btn-outline-primary px-4">
+                    <i class="fa-solid fa-file-arrow-down me-2"></i>Download Template
+                </a>
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
+</div>
+
+
 
     <!-- Delete confirmation modal -->
     <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">

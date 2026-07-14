@@ -1,43 +1,128 @@
 {% extends "base.html" %}
-{% load static %}
-
-{% block title %}404 - Page Not Found | InESS Tools{% endblock %}
 
 {% block content %}
+<style>
+  .error-card {
+    animation: fadeSlideUp 0.4s ease;
+  }
+
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .error-code {
+    font-size: 5.5rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    background: linear-gradient(135deg, #4f46e5, #7c6cf2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .error-icon-wrap {
+    width: 76px;
+    height: 76px;
+    background: #eef2ff;
+    box-shadow: 0 0 0 8px rgba(79, 70, 229, 0.06);
+  }
+
+  .error-icon-wrap i {
+    color: #4f46e5;
+  }
+
+  .error-heading {
+    font-size: 1.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  .error-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    max-width: 380px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .btn-error-primary {
+    background: #4f46e5;
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.7rem 1.5rem;
+    transition: background 0.15s ease, transform 0.05s ease, box-shadow 0.15s ease;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+  }
+
+  .btn-error-primary:hover {
+    background: #4338ca;
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.32);
+  }
+
+  .btn-error-outline {
+    border: 1px solid #d1d5db;
+    color: #374151;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.7rem 1.5rem;
+    transition: all 0.15s ease;
+  }
+
+  .btn-error-outline:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+    color: #111827;
+  }
+
+  .min-vh-75 {
+    min-height: 75vh;
+  }
+</style>
+
 <div class="container py-5">
     <div class="row justify-content-center align-items-center min-vh-75">
-        <div class="col-lg-7 col-md-9">
+        <div class="col-lg-6 col-md-8">
 
-            <div class="card border-0 shadow-lg rounded-4">
+            <div class="card border-0 shadow-lg rounded-4 error-card">
                 <div class="card-body text-center p-5">
 
-                    <!-- Error Code -->
-                    <h1 class="display-1 fw-bold text-primary mb-0">404</h1>
-
                     <!-- Icon -->
-                    <div class="my-3">
-                        <i class="bi bi-search text-primary" style="font-size: 4rem;"></i>
+                    <div class="mb-3">
+                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle error-icon-wrap">
+                            <i class="bi bi-search" style="font-size: 2rem;"></i>
+                        </div>
                     </div>
 
+                    <!-- Error Code -->
+                    <div class="error-code mb-2">404</div>
+
                     <!-- Heading -->
-                    <h2 class="fw-bold mb-3">Oops! Page Not Found</h2>
+                    <h2 class="fw-bold error-heading mb-3">Page not found</h2>
 
                     <!-- Description -->
-                    <p class="text-muted fs-5 mb-4">
-                        The page you're looking for may have been moved,
-                        deleted, or the URL may be incorrect.
+                    <p class="text-muted error-text mb-4">
+                        The page you're looking for may have been moved, deleted, or the URL may be incorrect.
                     </p>
 
                     <!-- Action Buttons -->
-                    <div class="d-grid gap-3 d-sm-flex justify-content-center">
-            
+                    <div class="d-grid gap-2 d-sm-flex justify-content-center mb-4">
                         {% if user.is_authenticated %}
-                        <a href="{% url 'tool_dashboard' %}"
-                           class="btn btn-outline-primary btn-lg px-4">
-                            <i class="bi bi-speedometer2 me-2"></i>
-                            Dashboard
+                        <a href="{% url 'tool_dashboard' %}" class="btn btn-error-primary rounded-pill px-4">
+                            <i class="bi bi-speedometer2 me-2"></i>Go to Dashboard
+                        </a>
+                        {% else %}
+                        <a href="{% url 'tool_login_info' %}" class="btn btn-error-primary rounded-pill px-4">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Go to Login
                         </a>
                         {% endif %}
+
+                        <button onclick="history.back()" class="btn btn-error-outline rounded-pill px-4">
+                            <i class="bi bi-arrow-left me-2"></i>Go Back
+                        </button>
                     </div>
 
                     <hr class="my-4">
