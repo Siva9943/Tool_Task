@@ -5,15 +5,18 @@ import os
 from django.conf import settings
 from django.core.mail import EmailMessage, get_connection
 
+
 def send_mail_gmail(to_email, cc_email, subject, message, attachments=None):
     try:
+        print("Creating SMTP connection...")
+
         connection = get_connection(
-            host=settings.EMAIL_HOST,
-            port=settings.EMAIL_PORT,
+            host="smtp.gmail.com",
+            port=587,
             username=settings.EMAIL_HOST_USER,
             password=settings.EMAIL_HOST_PASSWORD,
             use_tls=True,
-            timeout=getattr(settings, "EMAIL_TIMEOUT", 15),
+            timeout=10,
         )
 
         if isinstance(to_email, str):
@@ -25,18 +28,20 @@ def send_mail_gmail(to_email, cc_email, subject, message, attachments=None):
         email = EmailMessage(
             subject=subject,
             body=message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
+            from_email=settings.EMAIL_HOST_USER,
             to=to_email,
             cc=cc_email or [],
             connection=connection,
         )
 
+
         for filename, content, mimetype in attachments or []:
             email.attach(filename, content, mimetype)
 
         email.send(fail_silently=False)
+        print("Email sent successfully to:", to_email)
         return True
 
     except Exception as e:
-        print("Gmail sending failed:", repr(e))
-        return False
+        print("Gmail sending failed:", e)
+        raise

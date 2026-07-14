@@ -24,7 +24,6 @@ from .forms import *
 from django.contrib.auth.models import User
 from .forms import CustomUserForm
 from .models import Email_DB
-from email_ops.utils.email_service import send_email
 from django.db import models
 from simple_history.models import HistoricalRecords
 from .services import *
@@ -41,14 +40,11 @@ import random
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
- 
+from email_ops.utils.email_service import send_email
 User = get_user_model()
 
 # signup
 def signup_user(request):
-    if settings.SERVER_TYPE != settings.PRODUCTION:
-        messages.error(request, "New account registration is disabled in this environment.")
-        return redirect("tool_login_info")
 
     if request.method == "POST":
         action = request.POST.get("action")
@@ -126,7 +122,6 @@ def signup_user(request):
         if form.is_valid():
             email = form.cleaned_data["email"].lower()
             username = email.split("@")[0]
-
             if User.objects.filter(
                 Q(username=username) | Q(email=email)
             ).exists():
@@ -145,13 +140,13 @@ def signup_user(request):
             request.session.set_expiry(600)
 
             send_email(
-                email_type="notification",
-                to=email,
-                context={
-                    "subject": "Verify your signup",
-                    "message": f"Your OTP for account verification is {otp}. It is valid for 10 minutes.",
-                },
-            )
+                    email_type="otp",
+                    to=email,
+                    context={
+                        "user": {"username": username, "email": email, "full_name": form.cleaned_data["full_name"]},
+                        "otp": otp,
+                    },
+                )
 
             messages.success(request, "We sent a verification code to your email.")
             return render(request, "signup.html", {"form": CustomUserForm(initial=request.session["signup_pending_data"]), "allowed_domains": settings.ALLOWED_EMAIL_DOMAINS, "otp_sent": True})

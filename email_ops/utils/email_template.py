@@ -1,6 +1,7 @@
 def build_signup_email(context):
     user = context["user"]  # {"username", "email", "first_name"}
     subject = "Account Creation Successful"
+    print("context in build_signup_email:", context)
     message = f"""Hi {user.get('first_name') or user.get('username')},
 
 Your account has been created successfully.
@@ -14,9 +15,10 @@ Thank you.
 
 
 def build_error_report_email(context):
+
     import pandas as pd
     from io import BytesIO
-
+    print("context in build_error_report_email:", context)
     invalid_rows = context["invalid_rows"]
 
     df = pd.DataFrame(invalid_rows).rename(columns={
@@ -59,9 +61,24 @@ Thanks
 
 
 def build_notification_email(context):
-    
+    print("context in build_notification_email:", context)
     subject = context.get("subject", "Notification")
     message = context.get("message", "")
+    return subject, message, None
+
+
+def build_otp_email(context):
+    user = context["user"]  # {"username", "email", "full_name"}
+    otp = context["otp"]
+    subject = "Your Verification Code"
+    message = f"""Hi {user.get('full_name') or user.get('username')},
+
+Your verification code is: {otp}
+
+This code will expire in 10 minutes.
+
+Thank you.
+"""
     return subject, message, None
 
 
@@ -69,4 +86,5 @@ EMAIL_BUILDERS = {
     "signup": build_signup_email,
     "error_report": build_error_report_email,
     "notification": build_notification_email,
+    "otp": build_otp_email,
 }
