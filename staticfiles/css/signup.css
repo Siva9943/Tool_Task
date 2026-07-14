@@ -1,0 +1,106 @@
+
+  .signup-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #f8fafc 0%, #eef4ff 100%);
+    padding: 32px 0;
+  }
+
+  .auth-card {
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 20px;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+    padding: 28px;
+  }
+
+  .auth-card h3 {
+    color: #1f2937;
+    font-weight: 700;
+  }
+
+  .auth-card p {
+    font-size: 0.95rem;
+  }
+
+  .input-group-modern {
+    border: 1px solid #dbe2ea;
+    border-radius: 14px;
+    overflow: hidden;
+    background-color: #fff;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .input-group-modern:focus-within {
+    border-color: #198754;
+    box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.12);
+  }
+
+  .input-group-modern .input-group-text {
+    background: transparent;
+    border: none;
+    color: #6c757d;
+    padding-left: 14px;
+  }
+
+  .input-group-modern .form-control {
+    border: none;
+    box-shadow: none;
+    padding: 12px 10px;
+    background: transparent;
+  }
+
+  .input-group-modern .toggle-btn {
+    border: none;
+    background: transparent;
+    color: #6c757d;
+    box-shadow: none;
+    padding-right: 14px;
+  }
+
+  .input-group-modern .toggle-btn:focus {
+    box-shadow: none;
+  }
+
+  .form-label {
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 8px;
+  }
+
+  .auth-btn {
+    border-radius: 14px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+
+  .signup-link {
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .signup-link:hover {
+    text-decoration: underline;
+  }
+
+  .custom-toast {
+    border-radius: 14px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  }
+
+  .bottom-auth-link {
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 575.98px) {
+    .signup-page {
+      padding: 20px 0;
+      align-items: center;
+    }
+
+    .auth-card {
+      padding: 20px 16px;
+      border-radius: 16px;
+    }
+  }

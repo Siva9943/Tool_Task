@@ -1,0 +1,115 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+.input-group-text{
+    width: 50px;
+    height:48px;
+}
+#togglePassword{
+    width: 40px;
+    height:48px;
+}
+.login-page {
+    min-height: 90vh;
+    background-color: white;
+    overflow-x: hidden;
+}
+
+.auth-card {
+    border-radius: 26px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 24px 70px rgba(0,0,0,.25);
+}
+
+.auth-left {
+    background: linear-gradient(160deg, #2563eb 0%, #1d4ed8 55%, #0f172a 100%);
+}
+
+.brand-badge {
+    width: 58px;
+    height: 58px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,.14);
+    font-size: 1.5rem;
+}
+
+.feature-list {
+    margin-top: 1rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: .95rem;
+    opacity: .95;
+}
+
+.input-group-modern .input-group-text {
+    background: #f8fafc;
+    color:black;
+    border-right: 0;
+}
+
+.input-group-modern .form-control {
+    border-left: 0;
+}
+
+.input-group-modern .form-control:focus {
+    box-shadow: none;
+    border-color: #2563eb;
+}
+
+.toggle-btn {
+    border-left: 0;
+}
+
+.auth-btn {
+    border-radius: 12px;
+    font-weight: 600;
+    letter-spacing: .2px;
+    box-shadow: 0 10px 20px rgba(37,99,235,.25);
+}
+
+.auth-btn:hover {
+    transform: translateY(-1px);
+}
+
+.forgot-link,
+.signup-link {
+    font-weight: 600;
+}
+
+.form-control {
+    height: 48px;
+}
+
+[data-bs-theme="dark"] .login-page {
+    background-color: #0b1220;
+}
+
+[data-bs-theme="dark"] .auth-card {
+    background: rgba(15, 23, 42, .92);
+    box-shadow: 0 24px 70px rgba(0,0,0,.45);
+}
+
+[data-bs-theme="dark"] .auth-card .bg-white {
+    background-color: #131a2e !important;
+}
+
+[data-bs-theme="dark"] .input-group-modern .input-group-text {
+    background: #1a2138;
+    color: #cbd5e1;
+}
+
+[data-bs-theme="dark"] .auth-card h3,
+[data-bs-theme="dark"] .auth-card .form-label {
+    color: #fff;
+}
