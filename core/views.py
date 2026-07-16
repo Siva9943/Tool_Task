@@ -217,6 +217,9 @@ def safe_login_redirect(request):
     return redirect("tool_dashboard")
 
 def login_user(request):
+    if request.user.is_authenticated:
+        return redirect("tool_dashboard")
+    
     if request.method == "POST":
         email_or_username = request.POST.get("email")
         password = request.POST.get("password")
@@ -256,6 +259,7 @@ def login_user(request):
             request,
             "Invalid credentials."
         )
+    
     return render(request,"registration/login.html")
 
 @login_required

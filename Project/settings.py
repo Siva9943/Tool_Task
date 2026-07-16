@@ -50,7 +50,7 @@ REDIS_URL = os.getenv(
 
 # Pending
 DEBUG = os.getenv('DEBUG_MODE')=='True'
-ALLOWED_HOSTS = ['.vercel.app']
+ALLOWED_HOSTS = ['.vercel.app','localhost','127.0.0.1','testserver']
 ALLOWED_EMAIL_DOMAINS = [
     "inessconsulting.com",
     "gmail.com"
@@ -225,16 +225,23 @@ SESSION_CACHE_ALIAS = "default"
 SESSION_EXPIRE_AT_BROWSER_CLOSE=True
 
 
+if DEBUG:
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+else:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
+    SECURE_SSL_REDIRECT = True
 
-# SECURE_HSTS_SECONDS = 31536000  # 1 year
-# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-# SECURE_HSTS_PRELOAD = True
-# SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
 
-# SECURE_REFERRER_POLICY = "same-origin"
-# X_FRAME_OPTIONS = "DENY"
-# SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_REFERRER_POLICY = "same-origin"
+    X_FRAME_OPTIONS = "DENY"
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 
 CACHES = {
        "default": {
