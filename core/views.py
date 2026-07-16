@@ -265,6 +265,7 @@ def login_user(request):
 @login_required
 def logout_user(request):
     logout(request)
+    messages.success(request,'Logout sucesssfully !')
     return redirect('tool_login_info')
 
 
@@ -328,7 +329,6 @@ def upload_file(request):
             uploaded_file = form.cleaned_data["file"]
             result = process_upload_file(request.user, uploaded_file)
 
-            # Clear previous upload's leftovers
             InvalidUploadRow.objects.filter(user=request.user).delete()
 
             if result["template_error"]:
