@@ -50,7 +50,7 @@ REDIS_URL = os.getenv(
 
 # Pending
 DEBUG = os.getenv('DEBUG_MODE')=='True'
-ALLOWED_HOSTS = ['.vercel.app','localhost','127.0.0.1','testserver']
+ALLOWED_HOSTS = ['.vercel.app']
 ALLOWED_EMAIL_DOMAINS = [
     "inessconsulting.com",
     "gmail.com"
