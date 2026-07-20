@@ -107,12 +107,12 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 # DATABASES = {
 #     'default':{
@@ -125,15 +125,15 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 #     }
 # }
 
-import dj_database_url
+# import dj_database_url
 
-DATABASES = {
-    "default": dj_database_url.config(
-        default=os.environ.get("DATABASE_URL"),
-        conn_max_age=600,
-        ssl_require=False,
-    )
-}
+# DATABASES = {
+#     "default": dj_database_url.config(
+#         default=os.environ.get("DATABASE_URL"),
+#         conn_max_age=600,
+#         ssl_require=False,
+#     )
+# }
 
 
 # default="redis://localhost:6379/0"
@@ -223,17 +223,6 @@ LOGIN_REDIRECT_URL = 'tool_dashboard/'
 SESSION_CACHE_ALIAS = "default"
 SESSION_EXPIRE_AT_BROWSER_CLOSE=True
 
-if DEBUG:
-    SESSION_COOKIE_SECURE = False
-    CSRF_COOKIE_SECURE = False
-else:
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-
-    SECURE_SSL_REDIRECT = True
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
 
 
 CACHES = {
@@ -242,7 +231,7 @@ CACHES = {
            "LOCATION": REDIS_URL,
            "OPTIONS": {
                "CLIENT_CLASS": "django_redis.client.DefaultClient",
-               "CONNECTION_POOL_KWARGS": {"ssl_cert_reqs": None},  # only if REDIS_URL is rediss://
+               "CONNECTION_POOL_KWARGS": {"ssl_cert_reqs": None}, 
            },
        }
    }

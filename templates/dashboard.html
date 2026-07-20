@@ -31,8 +31,8 @@
 
 
    <h5 class="mb-3">
-    <span class="badge bg-primary px-3 py-2">
-        📦 Products: {{ page_obj.paginator.count }}
+    <span class="badge bg-primary px-3 py-2 mt-1">
+        Products: {{ page_obj.paginator.count }}
     </span>
 </h5>
     <div class="products-toolbar mb-2 p-2 border">
@@ -245,7 +245,7 @@
                         </div>
                         <div>
                             <h5 class="modal-title mb-1">Upload Product File</h5>
-                            <small class="text-white-50">Select an Excel or CSV file to import products</small>
+                            <small class="text-white-50">Select an Excel file to import products</small>
                         </div>
                     </div>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -264,7 +264,7 @@
                                     <h5 class="mb-2">Drag & Drop your file here</h5>
                                     <p class="text-muted mb-3">or click below to browse</p>
 
-                                    <input class="d-none" type="file" name="file" id="fileInput" accept=".xlsx,.xls,.csv">
+                                    <input class="d-none" type="file" name="file" id="fileInput" accept=".xlsx,.xls">
 
                                     <button type="button" class="btn btn-outline-primary px-4" id="chooseFileBtn">
                                         <i class="fa-solid fa-folder-open me-2"></i>Choose File
@@ -288,10 +288,10 @@
                             <div class="upload-side-card">
                                 <h6 class="fw-bold mb-3">File Guidelines</h6>
                                 <ul class="upload-list">
-                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i>Use .xlsx, .xls or .csv</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i>Use .xlsx, .xls</li>
                                     <li><i class="fa-solid fa-circle-check text-success me-2"></i>Keep required columns ready</li>
                                     <li><i class="fa-solid fa-circle-check text-success me-2"></i>Prefer the template file</li>
-                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i>Product-Code : PXXXX Must 5 Characters</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i>Product-Code : PXXXX Must 4+ Characters</li>
                                     
                                 </ul>
 
@@ -329,7 +329,7 @@
                     <div class="col-md-6">
                         <h6 class="fw-bold mb-2"><i class="fa-solid fa-file-excel text-success me-2"></i>Accepted File Format</h6>
                         <ul class="upload-list mb-0 small">
-                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>File types: <strong>.xlsx</strong>, <strong>.xls</strong> or <strong>.csv</strong> only</li>
+                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>File types: <strong>.xlsx</strong>, <strong>.xls</strong> &nbsp; only</li>
                             <li><i class="fa-solid fa-circle-check text-success me-2"></i>First row must contain the exact column headers, in the exact order, shown below</li>
                             <li><i class="fa-solid fa-circle-check text-success me-2"></i>Columns marked <span class="text-danger fw-semibold">*</span> are mandatory</li>
                             <li><i class="fa-solid fa-circle-check text-success me-2"></i>Do not add, remove, rename or reorder columns</li>

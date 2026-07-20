@@ -248,7 +248,7 @@
                                                 type="text"
                                                 name="email"
                                                 id="id_email"
-                                                placeholder="sam@inessconsulting.com"
+                                                placeholder="Enter the Username/Email "
                                                 required>
 
                                             <span class="field-trailing">
@@ -354,7 +354,6 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-    // Password Toggle
     const toggleBtn = document.getElementById("togglePassword");
     const passwordInput = document.getElementById("id_password");
     const toggleIcon = document.getElementById("toggleIcon");
@@ -373,14 +372,12 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Bootstrap Toast
     const toastElements = document.querySelectorAll(".toast");
     toastElements.forEach(function (toastEl) {
         const toast = new bootstrap.Toast(toastEl);
         toast.show();
     });
 
-    // ---- Validation ----
     const form = document.getElementById("login_form");
     const emailEl = document.getElementById("id_email");
     const pwEl = document.getElementById("id_password");
