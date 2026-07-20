@@ -104,7 +104,6 @@ def validate_row(row, seen_codes, seen_names, existing_codes, existing_names):
     description = clean_str(row.get('description'))
     item_category = clean_str(row.get('item_category'))
 
-    # Required fields
     required_map = {
         'product_code': 'Product Code',
         'product_name': 'Product Name',
@@ -118,8 +117,8 @@ def validate_row(row, seen_codes, seen_names, existing_codes, existing_names):
     if product_code:
         if len(product_code) > 20:
             errors.append('Product Code must be at most 20 characters')
-        if not re.fullmatch(r'P\d{4,}', product_code):
-            errors.append('Product Code must be in Start "P"/4 digits above' )
+        if not re.fullmatch(r'P[A-Za-z0-9]{4,}', product_code):
+            errors.append('Product Code must start with "P" and contain at least 4 letters/numbers after it.')
     if product_name:
         if len(product_name)>50:
             errors.append('Product Name must below 50 characters')

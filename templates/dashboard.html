@@ -289,10 +289,9 @@
                                 <h6 class="fw-bold mb-3">File Guidelines</h6>
                                 <ul class="upload-list">
                                     <li><i class="fa-solid fa-circle-check text-success me-2"></i>Use .xlsx, .xls</li>
-                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i>Keep required columns ready</li>
                                     <li><i class="fa-solid fa-circle-check text-success me-2"></i>Prefer the template file</li>
-                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i>Product-Code : PXXXX Must 4+ Characters</li>
-                                    
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i>Product-Code : PXXXX Must 5+ Characters</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i>Invalid records will be sent to your email. Please correct the data and remove the <strong>"Error Message"</strong> column before uploading the file again.</li>
                                 </ul>
 
                                 <a href="{% url 'temp_excel' %}" class="btn btn-light w-100 mt-3 text-primary border border-black">
@@ -364,7 +363,7 @@
                             <tr>
                                 <td>Product code*</td>
                                 <td><span class="badge text-bg-danger">Must</span></td>
-                                <td>Starts with <code>P</code> followed by 4+ digits (e.g. <code>P1001</code>); max 20 characters; must be unique (not already used in file or database)</td>
+                                <td>Starts with <code>P</code> followed by 5+ digits (e.g. <code>P1001</code>); max 20 characters; must be unique (not already used in file or database)</td>
                             </tr>
                             <tr>
                                 <td>Product name*</td>
