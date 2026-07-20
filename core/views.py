@@ -323,7 +323,7 @@ def upload_file(request):
     if request.method == "POST":
         form = UploadFileForm(request.POST, request.FILES)
         if "file" not in request.FILES:
-            messages.error(request, "Please Upload an Excel/CSV file.")
+            messages.error(request, "Please Upload an Excel file.")
             return redirect("tool_dashboard")
         if form.is_valid():
             uploaded_file = form.cleaned_data["file"]

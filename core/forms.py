@@ -108,19 +108,19 @@ class UploadFileForm(forms.Form):
         label='Select CSV or Excel file',
         widget=forms.ClearableFileInput(attrs={
             'class': 'form-control',
-            'accept': '.csv,.xlsx',
+            'accept': '.xlsx',
             'id': 'id_file',
         }),
-        help_text='Only .csv and .xlsx files are allowed.',
+        help_text='Only .xlsx files are allowed.',
     )
 
     def clean_file(self):
         uploaded_file = self.cleaned_data['file']
         ext = os.path.splitext(uploaded_file.name)[1].lower()
 
-        if ext not in ['.csv', '.xlsx']:
+        if ext not in ['.xlsx']:
             raise forms.ValidationError(
-                f'Unsupported file type "{ext}". Only CSV and Excel (.xlsx) files are allowed.'
+                f'Unsupported file type "{ext}". Only Excel (.xlsx) files are allowed.'
             )
 
         max_mb = 10
