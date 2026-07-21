@@ -27,16 +27,23 @@ class Email_DB(models.Model):
     sent_at=models.DateField(auto_now_add=True)
 
 class AuditLog(models.Model):
-    user = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True
-    )
-    action = models.CharField(max_length=50)
+    ACTION_CHOICES = [
+        ("LOGIN", "Login"),
+        ("LOGOUT", "Logout"),
+        ("FAILED_LOGIN", "Failed Login"),
+    ]
+
+    user = models.ForeignKey(User,on_delete=models.SET_NULL,null=True,blank=True)
+    username = models.CharField(max_length=150, blank=True)
+    role = models.CharField(max_length=100, blank=True)
+    action = models.CharField(max_length=100, choices=ACTION_CHOICES)
+    login_time = models.DateTimeField(null=True, blank=True)
+    logout_time = models.DateTimeField(null=True, blank=True)
+    failed_reason = models.CharField(max_length=255, blank=True)
     ip_address = models.GenericIPAddressField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    def __str__(self):
+        return f"{self.username} - {self.action}"
 
 class InvalidUploadRow(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="invalid_rows")

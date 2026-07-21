@@ -40,6 +40,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from email_ops.utils.email_service import send_email
+from django.utils import timezone
 
 # signup
 def signup_user(request):
@@ -522,25 +523,38 @@ from .models import AuditLog
 
 @receiver(user_logged_in)
 def log_login(sender, request, user, **kwargs):
+    group=user.groups.first()
+    group_type=group.name if group else 'Client'
     AuditLog.objects.create(
         user=user,
+        username=user.username,
+        role= group_type,
         action="LOGIN",
+        login_time=timezone.now(),
         ip_address=request.META.get("REMOTE_ADDR")
     )
 
 @receiver(user_logged_out)
 def log_logout(sender, request, user, **kwargs):
+    group=user.groups.first()
+    group_type=group.name if group else 'Client'
     AuditLog.objects.create(
         user=user,
+        username=user.username,
+        role=group_type,
         action="LOGOUT",
+        logout_time=timezone.now(),
         ip_address=request.META.get("REMOTE_ADDR")
     )
 
 @receiver(user_login_failed)
 def log_failed_login(sender, credentials, request, **kwargs):
+    username=credentials.get('username','')
     AuditLog.objects.create(
-        user=None,
-        action=f"FAILED LOGIN ({credentials.get('username')})",
+        username=username,
+        action=f"FAILED LOGIN",
+        failed_reason="Invalid Username or password",
+        login_time=timezone.now(),
         ip_address=request.META.get("REMOTE_ADDR")
     )
 
