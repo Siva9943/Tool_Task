@@ -348,9 +348,17 @@
     padding: 14px 0 16px;
   }
 
-  #scrollLoader { display: none; }
-  #scrollLoader.is-visible { display: block; }
-  #noMoreRows { display: none; }
+  #scrollLoader {
+    display: none;
+  }
+
+  #scrollLoader.is-visible {
+    display: block;
+  }
+
+  #noMoreRows {
+    display: none;
+  }
 
   #serverToastContainer .toast {
     border-radius: 14px;
@@ -383,7 +391,8 @@
 
 <div id="serverToastContainer" class="toast-container position-fixed top-0 end-0 p-3" style="z-index:1080;">
   {% for message in messages %}
-  <div class="toast border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
+  <div class="toast border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true"
+    data-bs-delay="5000">
     <div class="toast-header
       {% if message.tags == 'error' or message.tags == 'danger' %}bg-danger text-white
       {% elif message.tags == 'warning' %}bg-warning text-dark
@@ -462,7 +471,8 @@
     </div>
     <div class="text">
       <strong>{{ summary.failed_count }} row{{ summary.failed_count|pluralize }} failed validation.</strong>
-      Download the invalid rows, correct the highlighted values, and upload the revised file. Uploading a new file will replace the current invalid-row dataset.
+      Download the invalid rows, correct the highlighted values, and upload the revised file. Uploading a new file will
+      replace the current invalid-row dataset.
     </div>
     <button type="button" class="btn-close ms-auto" aria-label="Close"
       onclick="document.getElementById('validationNote').style.display='none';"></button>
@@ -522,19 +532,20 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-  document.querySelectorAll('#serverToastContainer .toast').forEach(function (el) {
-    new bootstrap.Toast(el).show();
-  });
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('#serverToastContainer .toast').forEach(function (el) {
+      new bootstrap.Toast(el).show();
+    });
 
-  const tbody = document.getElementById("errorTableBody");
-  if (!tbody) return;
+    const tbody = document.getElementById("errorTableBody");
+    if (!tbody) return;
 
-  const loader = document.getElementById("scrollLoader");
-  const noMore = document.getElementById("noMoreRows");
+    const loader = document.getElementById("scrollLoader");
+    const noMore = document.getElementById("noMoreRows");
 
-  let currentPage = 1;
-  let hasNext = {{ page_obj.has_next|lower }};
+    let currentPage = 1;
+    let hasNext = {{ page_obj.has_next| lower
+  }};
   let loading = false;
 
   if (!hasNext) noMore.style.display = "block";
@@ -563,7 +574,7 @@ document.addEventListener('DOMContentLoaded', function () {
           observer.disconnect();
         }
       })
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => {
         loading = false;
         loader.classList.remove("is-visible");

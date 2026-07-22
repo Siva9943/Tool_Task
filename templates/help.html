@@ -17,15 +17,19 @@
         <div class="card-body">
             <h6 class="fw-bold">Uploading products</h6>
             <ol class="mb-4">
-                <li>On the Dashboard, click <strong>Upload</strong> and download the template file if you don't already have it.</li>
+                <li>On the Dashboard, click <strong>Upload</strong> and download the template file if you don't already
+                    have it.</li>
                 <li>Fill in your product rows without changing the column headers or their order.</li>
                 <li>Save the file as <code>.xlsx</code>, <code>.xls</code>, or <code>.csv</code> and upload it.</li>
                 <li>Rows that pass validation are added to your product list immediately.</li>
-                <li>Rows that fail appear on the <a href="{% url 'upload_data_error' %}">Invalid Data</a> page with the exact reason for each failure. Download, correct, and re-upload them — a new upload replaces the previous invalid-row list.</li>
+                <li>Rows that fail appear on the <a href="{% url 'upload_data_error' %}">Invalid Data</a> page with the
+                    exact reason for each failure. Download, correct, and re-upload them — a new upload replaces the
+                    previous invalid-row list.</li>
             </ol>
 
             <h6 class="fw-bold">Column rules</h6>
-            <p class="text-muted small mb-2">Columns marked with <strong>*</strong> are required; every other column is optional.</p>
+            <p class="text-muted small mb-2">Columns marked with <strong>*</strong> are required; every other column is
+                optional.</p>
             <div class="table-responsive">
                 <table class="table table-sm table-bordered align-middle">
                     <thead class="table-light">
@@ -39,12 +43,14 @@
                         <tr>
                             <td>Product code*</td>
                             <td>Text</td>
-                            <td>Required. Must start with "P" followed by 4 or more digits (e.g. P0001). Max 20 characters.</td>
+                            <td>Required. Must start with "P" followed by 4 or more digits (e.g. P0001). Max 20
+                                characters.</td>
                         </tr>
                         <tr>
                             <td>Product name*</td>
                             <td>Text</td>
-                            <td>Required. Must start with a letter; letters, numbers, spaces and <code>- ( ) . /</code> allowed. Max 50 characters.</td>
+                            <td>Required. Must start with a letter; letters, numbers, spaces and <code>- ( ) . /</code>
+                                allowed. Max 50 characters.</td>
                         </tr>
                         <tr>
                             <td>Description</td>
@@ -80,7 +86,8 @@
                 </table>
             </div>
             <p class="text-muted small mb-0">
-                Product Code and Product Name must also be unique — both within the uploaded file and against products already in the database.
+                Product Code and Product Name must also be unique — both within the uploaded file and against products
+                already in the database.
             </p>
         </div>
     </div>
@@ -100,40 +107,49 @@
                     </h2>
                     <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#helpAccordion">
                         <div class="accordion-body">
-                            The file's column headers didn't match the template exactly — a column is missing, extra, renamed, or out of order. Re-download the template and copy your data into it without altering the header row.
+                            The file's column headers didn't match the template exactly — a column is missing, extra,
+                            renamed, or out of order. Re-download the template and copy your data into it without
+                            altering the header row.
                         </div>
                     </div>
                 </div>
 
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq2">
                             Why are only some of my rows rejected?
                         </button>
                     </h2>
                     <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
                         <div class="accordion-body">
-                            Each row is validated independently against the <a href="#instructions">column rules</a> above. Visit the <a href="{% url 'upload_data_error' %}">Invalid Data</a> page to see the exact reason for every failed row, fix the values, and re-upload.
+                            Each row is validated independently against the <a href="#instructions">column rules</a>
+                            above. Visit the <a href="{% url 'upload_data_error' %}">Invalid Data</a> page to see the
+                            exact reason for every failed row, fix the values, and re-upload.
                         </div>
                     </div>
                 </div>
 
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq3">
                             How do I edit or delete a product?
                         </button>
                     </h2>
                     <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
                         <div class="accordion-body">
-                            On the Dashboard, each product card has <strong>Update</strong> and <strong>Delete</strong> buttons. Update opens a form to edit the product's details; Delete asks for confirmation before removing it.
+                            On the Dashboard, each product card has <strong>Update</strong> and <strong>Delete</strong>
+                            buttons. Update opens a form to edit the product's details; Delete asks for confirmation
+                            before removing it.
                         </div>
                     </div>
                 </div>
 
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq4">
                             How do I switch between light and dark mode?
                         </button>
                     </h2>
@@ -146,20 +162,23 @@
 
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq5">
                             How do I change my password?
                         </button>
                     </h2>
                     <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
                         <div class="accordion-body">
-                            Open your profile menu (top-right, next to the theme toggle) and choose <strong>Change Password</strong>.
+                            Open your profile menu (top-right, next to the theme toggle) and choose <strong>Change
+                                Password</strong>.
                         </div>
                     </div>
                 </div>
 
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq6">
                             Who do I contact for further help?
                         </button>
                     </h2>

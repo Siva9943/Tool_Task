@@ -8,304 +8,328 @@
 <!-- toast -->
 <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999999;">
     {% if messages %}
-        {% for message in messages %}
-        <div class="toast align-items-center border-0 shadow
+    {% for message in messages %}
+    <div class="toast align-items-center border-0 shadow
                     {% if message.tags == 'success' %}text-bg-success
                     {% elif message.tags == 'error' %}text-bg-danger
                     {% elif message.tags == 'warning' %}text-bg-warning
-                    {% else %}text-bg-info{% endif %}"
-             role="alert" aria-live="assertive" aria-atomic="true"
-             data-bs-delay="4000" data-bs-autohide="true">
-            <div class="d-flex">
-                <div class="toast-body">
-                    {{ message }}
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    {% else %}text-bg-info{% endif %}" role="alert" aria-live="assertive" aria-atomic="true"
+        data-bs-delay="4000" data-bs-autohide="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                {{ message }}
             </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
         </div>
-        {% endfor %}
+    </div>
+    {% endfor %}
     {% endif %}
 </div>
 
 
 
 
-   <h5 class="mb-3">
+<h5 class="mb-3">
     <span class="badge bg-primary px-3 py-2 mt-1">
         Products: {{ page_obj.paginator.count }}
     </span>
 </h5>
-    <div class="products-toolbar mb-2 p-2 border">
-        <div class="toolbar-left ms-2">
-            <h4 class="section-title mb-1 text-primary ">Products</h4>
-            <p class="text-muted mb-0 small">Manage, search, filter, update and review product records.</p>
-        </div>
-
-        <div class="toolbar-menu">
-            <button type="button" class="toolbar-menu-item toolbar-menu-item-upload border border-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
-                <i class="fa-solid fa-cloud-arrow-up"></i>
-                <span>Upload</span>
-            </button>
-            <a href="{% url 'upload_data_error' %}" class="toolbar-menu-item toolbar-menu-item-danger border border-danger">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-                <span>Invalid Data</span>
-            </a>
-            <button type="button" class="toolbar-menu-item toolbar-menu-item-info border border-info" data-bs-toggle="modal" data-bs-target="#userGuideModal">
-                <i class="fa-solid fa-circle-info"></i>
-                <span>User Guide</span>
-            </button>
-        </div>
+<div class="products-toolbar mb-2 p-2 border">
+    <div class="toolbar-left ms-2">
+        <h4 class="section-title mb-1 text-primary ">Products</h4>
+        <p class="text-muted mb-0 small">Manage, search, filter, update and review product records.</p>
     </div>
-    
-     <form method="get" id="filterForm" class="products-filter-form" action="{% url 'tool_dashboard' %}">
-            <div class="filter-group">
-                <div class="input-group input-group-sm filter-control">
-                    <span class="input-group-text"><i class="fa-solid fa-barcode"></i></span>
-                    <input type="text" name="product_code" class="form-control" placeholder="Product Code"
-                           value="{{ request.GET.product_code }}">
-                </div>
-            </div>
 
-            <div class="filter-group">
-                <div class="input-group input-group-sm filter-control">
-                    <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
-                    <input type="text" name="product_name" class="form-control" placeholder="Product Name"
-                           value="{{ request.GET.product_name }}">
-                </div>
-            </div>
-
-           
-
-            <div class="filter-actions">
-                <!-- <button type="submit" class="btn btn-primary btn-sm action-btn">
-                    <i class="fa-solid fa-filter me-1"></i>Filter
-                </button> -->
-                <a href="{% url 'tool_dashboard' %}" class="btn btn-outline-secondary btn-sm action-btn">
-                    <i class="fa-solid fa-rotate-left me-1"></i>Reset
-                </a>
-            </div>
-        </form>
-        <!--  -->
+    <div class="toolbar-menu">
+        <button type="button" class="toolbar-menu-item toolbar-menu-item-upload border border-primary"
+            data-bs-toggle="modal" data-bs-target="#uploadModal">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span>Upload</span>
+        </button>
+        <a href="{% url 'upload_data_error' %}" class="toolbar-menu-item toolbar-menu-item-danger border border-danger">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>Invalid Data</span>
+        </a>
+        <button type="button" class="toolbar-menu-item toolbar-menu-item-info border border-info" data-bs-toggle="modal"
+            data-bs-target="#userGuideModal">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>User Guide</span>
+        </button>
+    </div>
 </div>
 
-    <div class="row g-3 mb-3 p-3">
-        {% if page_obj %}
-            {% for i in page_obj %}
-            <div class="col-xl-3 col-lg-4 col-md-6">
-                <div class="product-card">
-                    <div class="product-card-top">
-                        <div class="product-card-heading">
-                            <h5 class="product-card-title" title="{{ i.product_name }}">{{ i.product_name }}</h5>
-                            <span class="product-card-code"><i class="fa-solid fa-barcode"></i>{{ i.product_code }}</span>
-                        </div>
-
-                        {% if i.quantity %}
-                            <span class="stock-badge stock-in"><i class="fa-solid fa-circle-check"></i>In Stock</span>
-                        {% else %}
-                            <span class="stock-badge stock-out"><i class="fa-solid fa-circle-xmark"></i>Out</span>
-                        {% endif %}
-                    </div>
-
-                    <p class="product-card-desc">{{ i.description|default:"No description available." }}</p>
-
-                    <div class="product-card-meta">
-                        <span class="meta-chip"><i class="fa-solid fa-cubes"></i>Qty {{ i.quantity }}</span>
-                    </div>
-
-                    <div class="product-card-price">
-                        <div>
-                            <span class="price-label">Cost</span>
-                            <span class="price-cost">₹{{ i.cost_price }}</span>
-                        </div>
-                        <div class="text-end">
-                            <span class="price-label">Selling Price</span>
-                            <span class="price-sell">₹{{ i.selling_price }}</span>
-                        </div>
-                    </div>
-
-                    <div class="product-card-actions">
-                        <button class="btn-pill btn-pill-primary"
-                                data-bs-toggle="modal"
-                                data-bs-target="#updateModal{{ i.id }}">
-                            <i class="fa-solid fa-pen"></i>Update
-                        </button>
-
-                        <a href="{% url 'product_delete' i.id %}"
-                           class="btn-pill btn-pill-danger js-delete-product"
-                           data-product-name="{{ i.product_name }}">
-                            <i class="fa-solid fa-trash"></i>Delete
-                        </a>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-
-
-            
-
-            <!-- Update modal -->
-
-            {% for i in page_obj %}
-            <div class="modal fade" id="updateModal{{ i.id }}" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-lg modal-dialog-centered">
-                    <div class="modal-content border-0 shadow">
-                        <form id="updateForm{{ i.id }}" class="update-product-form" method="POST" action="{% url 'product_update' i.id %}" novalidate>
-                            {% csrf_token %}
-
-                            <div class="modal-header update-modal-header">
-                                <div>
-                                    <h5 class="modal-title fw-bold mb-0">Update Product Details</h5>
-                                    <small class="text-muted">{{ i.product_code }}</small>
-                                </div>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-
-                            <div class="modal-body pt-2">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold text-muted small">Product Code</label>
-                                        <input type="text" class="form-control form-control-sm bg-light" name="product_code" value="{{ i.product_code }}" readonly>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold small">Product Name <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control form-control-sm" name="product_name" value="{{ i.product_name }}" placeholder="Letters only">
-                                        <div class="error"></div>
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <label class="form-label fw-semibold small">Description <span class="text-muted fw-normal">(optional, max 150)</span></label>
-                                        <input type="text" class="form-control form-control-sm" name="description" value="{{ i.description }}" maxlength="150">
-                                        <div class="error"></div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold small">Item Category <span class="text-muted fw-normal">(optional, max 50)</span></label>
-                                        <input type="text" class="form-control form-control-sm" name="item_category" value="{{ i.item_category }}" maxlength="50">
-                                        <div class="error"></div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold small">Quantity <span class="text-danger">*</span> <span class="text-muted fw-normal">(0 – 5000)</span></label>
-                                        <input type="number" class="form-control form-control-sm" name="quantity" value="{{ i.quantity }}" min="0" max="5000">
-                                        <div class="error"></div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold small">Cost Price <span class="text-danger">*</span> <span class="text-muted fw-normal">(₹0 – ₹1 Cr)</span></label>
-                                        <input type="number" step="0.01" class="form-control form-control-sm" name="cost_price" value="{{ i.cost_price }}" min="0" max="10000000">
-                                        <div class="error"></div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold small">Selling Price <span class="text-danger">*</span> <span class="text-muted fw-normal">(≥ 0)</span></label>
-                                        <input type="number" step="0.01" class="form-control form-control-sm" name="selling_price" value="{{ i.selling_price }}" min="0">
-                                        <div class="error"></div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold small">Expire Date <span class="text-danger">*</span></label>
-                                        <input type="date" class="form-control form-control-sm" name="expire_date" value="{{ i.expire_date|date:'Y-m-d' }}">
-                                        <div class="error"></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="modal-footer update-modal-footer">
-                                <button type="button" class="btn btn-outline-secondary btn-sm px-4" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-primary btn-sm px-4">
-                                    <i class="fa-solid fa-floppy-disk me-1"></i>Save Changes
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        {% else %}
-            <div class="col-12">
-                <div class="alert alert-info text-center">No Products Available</div>
-            </div>
-        {% endif %}
+<form method="get" id="filterForm" class="products-filter-form" action="{% url 'tool_dashboard' %}">
+    <div class="filter-group">
+        <div class="input-group input-group-sm filter-control">
+            <span class="input-group-text"><i class="fa-solid fa-barcode"></i></span>
+            <input type="text" name="product_code" class="form-control" placeholder="Product Code"
+                value="{{ request.GET.product_code }}">
+        </div>
     </div>
 
-    <!-- <div class="d-flex justify-content-end mb-4">
+    <div class="filter-group">
+        <div class="input-group input-group-sm filter-control">
+            <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input type="text" name="product_name" class="form-control" placeholder="Product Name"
+                value="{{ request.GET.product_name }}">
+        </div>
+    </div>
+
+
+
+    <div class="filter-actions">
+        <!-- <button type="submit" class="btn btn-primary btn-sm action-btn">
+                    <i class="fa-solid fa-filter me-1"></i>Filter
+                </button> -->
+        <a href="{% url 'tool_dashboard' %}" class="btn btn-outline-secondary btn-sm action-btn">
+            <i class="fa-solid fa-rotate-left me-1"></i>Reset
+        </a>
+    </div>
+</form>
+<!--  -->
+</div>
+
+<div class="row g-3 mb-3 p-3">
+    {% if page_obj %}
+    {% for i in page_obj %}
+    <div class="col-xl-3 col-lg-4 col-md-6">
+        <div class="product-card">
+            <div class="product-card-top">
+                <div class="product-card-heading">
+                    <h5 class="product-card-title" title="{{ i.product_name }}">{{ i.product_name }}</h5>
+                    <span class="product-card-code"><i class="fa-solid fa-barcode"></i>{{ i.product_code }}</span>
+                </div>
+
+                {% if i.quantity %}
+                <span class="stock-badge stock-in"><i class="fa-solid fa-circle-check"></i>In Stock</span>
+                {% else %}
+                <span class="stock-badge stock-out"><i class="fa-solid fa-circle-xmark"></i>Out</span>
+                {% endif %}
+            </div>
+
+            <p class="product-card-desc">{{ i.description|default:"No description available." }}</p>
+
+            <div class="product-card-meta">
+                <span class="meta-chip"><i class="fa-solid fa-cubes"></i>Qty {{ i.quantity }}</span>
+            </div>
+
+            <div class="product-card-price">
+                <div>
+                    <span class="price-label">Cost</span>
+                    <span class="price-cost">₹{{ i.cost_price }}</span>
+                </div>
+                <div class="text-end">
+                    <span class="price-label">Selling Price</span>
+                    <span class="price-sell">₹{{ i.selling_price }}</span>
+                </div>
+            </div>
+
+            <div class="product-card-actions">
+                <button class="btn-pill btn-pill-primary" data-bs-toggle="modal"
+                    data-bs-target="#updateModal{{ i.id }}">
+                    <i class="fa-solid fa-pen"></i>Update
+                </button>
+
+                <a href="{% url 'product_delete' i.id %}" class="btn-pill btn-pill-danger js-delete-product"
+                    data-product-name="{{ i.product_name }}">
+                    <i class="fa-solid fa-trash"></i>Delete
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+
+
+
+    <!-- Update modal -->
+
+    {% for i in page_obj %}
+    <div class="modal fade" id="updateModal{{ i.id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <form id="updateForm{{ i.id }}" class="update-product-form" method="POST"
+                    action="{% url 'product_update' i.id %}" novalidate>
+                    {% csrf_token %}
+
+                    <div class="modal-header update-modal-header">
+                        <div>
+                            <h5 class="modal-title fw-bold mb-0">Update Product Details</h5>
+                            <small class="text-muted">{{ i.product_code }}</small>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body pt-2">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-muted small">Product Code</label>
+                                <input type="text" class="form-control form-control-sm bg-light" name="product_code"
+                                    value="{{ i.product_code }}" readonly>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">Product Name <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-sm" name="product_name"
+                                    value="{{ i.product_name }}" placeholder="Letters only">
+                                <div class="error"></div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label fw-semibold small">Description <span
+                                        class="text-muted fw-normal">(optional, max 150)</span></label>
+                                <input type="text" class="form-control form-control-sm" name="description"
+                                    value="{{ i.description }}" maxlength="150">
+                                <div class="error"></div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">Item Category <span
+                                        class="text-muted fw-normal">(optional, max 50)</span></label>
+                                <input type="text" class="form-control form-control-sm" name="item_category"
+                                    value="{{ i.item_category }}" maxlength="50">
+                                <div class="error"></div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">Quantity <span class="text-danger">*</span>
+                                    <span class="text-muted fw-normal">(0 – 5000)</span></label>
+                                <input type="number" class="form-control form-control-sm" name="quantity"
+                                    value="{{ i.quantity }}" min="0" max="5000">
+                                <div class="error"></div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">Cost Price <span
+                                        class="text-danger">*</span> <span class="text-muted fw-normal">(₹0 – ₹1
+                                        Cr)</span></label>
+                                <input type="number" step="0.01" class="form-control form-control-sm" name="cost_price"
+                                    value="{{ i.cost_price }}" min="0" max="10000000">
+                                <div class="error"></div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">Selling Price <span
+                                        class="text-danger">*</span> <span class="text-muted fw-normal">(≥
+                                        0)</span></label>
+                                <input type="number" step="0.01" class="form-control form-control-sm"
+                                    name="selling_price" value="{{ i.selling_price }}" min="0">
+                                <div class="error"></div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">Expire Date <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" class="form-control form-control-sm" name="expire_date"
+                                    value="{{ i.expire_date|date:'Y-m-d' }}">
+                                <div class="error"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer update-modal-footer">
+                        <button type="button" class="btn btn-outline-secondary btn-sm px-4"
+                            data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary btn-sm px-4">
+                            <i class="fa-solid fa-floppy-disk me-1"></i>Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="col-12">
+        <div class="alert alert-info text-center">No Products Available</div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- <div class="d-flex justify-content-end mb-4">
         <button type="button" class="magic-btn" data-bs-toggle="modal" data-bs-target="#uploadModal">
             <i class="fa-solid fa-cloud-arrow-up me-2"></i>Upload Files
         </button>
     </div> -->
 
-    <div class="modal fade" id="uploadModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content upload-modal-content border-0">
-                <div class="modal-header upload-modal-header">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="modal-icon">
-                            <i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>
-                        </div>
-                        <div>
-                            <h5 class="modal-title mb-1">Upload Product File</h5>
-                            <small class="text-white-50">Select an Excel file to import products</small>
-                        </div>
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content upload-modal-content border-0">
+            <div class="modal-header upload-modal-header">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon">
+                        <i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>
                     </div>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <div>
+                        <h5 class="modal-title mb-1">Upload Product File</h5>
+                        <small class="text-white-50">Select an Excel file to import products</small>
+                    </div>
                 </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
 
-                <div class="modal-body p-4 p-md-5">
-                    <div class="row g-4">
-                        <div class="col-md-7">
-                            <form method="POST" enctype="multipart/form-data" action="{% url 'tool_upload_info' %}" id="uploadForm">
-                                {% csrf_token %}
+            <div class="modal-body p-4 p-md-5">
+                <div class="row g-4">
+                    <div class="col-md-7">
+                        <form method="POST" enctype="multipart/form-data" action="{% url 'tool_upload_info' %}"
+                            id="uploadForm">
+                            {% csrf_token %}
 
-                                <div class="drop-zone-modal" id="dropZone">
-                                    <div class="drop-zone-icon">
-                                        <i class="fa-solid fa-file-arrow-up"></i>
-                                    </div>
-                                    <h5 class="mb-2">Drag & Drop your file here</h5>
-                                    <p class="text-muted mb-3">or click below to browse</p>
-
-                                    <input class="d-none" type="file" name="file" id="fileInput" accept=".xlsx,.xls">
-
-                                    <button type="button" class="btn btn-outline-primary px-4" id="chooseFileBtn">
-                                        <i class="fa-solid fa-folder-open me-2"></i>Choose File
-                                    </button>
-
-                                    <div class="selected-file mt-3" id="fileInfo">No file selected</div>
+                            <div class="drop-zone-modal" id="dropZone">
+                                <div class="drop-zone-icon">
+                                    <i class="fa-solid fa-file-arrow-up"></i>
                                 </div>
+                                <h5 class="mb-2">Drag & Drop your file here</h5>
+                                <p class="text-muted mb-3">or click below to browse</p>
 
-                                <div class="d-flex gap-2 flex-wrap mt-4">
-                                    <button type="submit" class="btn btn-success px-4" id="uploadBtn">
-                                        <i class="fa-solid fa-upload me-2"></i>Upload Now
-                                    </button>
-                                    <button type="button" class="btn btn-outline-secondary px-4" id="clearBtn">
-                                        <i class="fa-solid fa-rotate-left me-2"></i>Clear
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                                <input class="d-none" type="file" name="file" id="fileInput" accept=".xlsx,.xls">
 
-                        <div class="col-md-5">
-                            <div class="upload-side-card">
-                                <h6 class="fw-bold mb-3">File Guidelines</h6>
-                                <ul class="upload-list">
-                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i>Use .xlsx, .xls</li>
-                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i>Keep required columns ready</li>
-                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i>Prefer the template file</li>
-                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i>Product-Code : PXXXX Must 5+ Characters</li>
-                                    
-                                </ul>
+                                <button type="button" class="btn btn-outline-primary px-4" id="chooseFileBtn">
+                                    <i class="fa-solid fa-folder-open me-2"></i>Choose File
+                                </button>
 
-                                <a href="{% url 'temp_excel' %}" class="btn btn-light w-100 mt-3 text-primary border border-black">
-                                    <i class="fa-solid fa-file-arrow-down me-2 "></i>Download Template
-                                </a>
+                                <div class="selected-file mt-3" id="fileInfo">No file selected</div>
                             </div>
+
+                            <div class="d-flex gap-2 flex-wrap mt-4">
+                                <button type="submit" class="btn btn-success px-4" id="uploadBtn">
+                                    <i class="fa-solid fa-upload me-2"></i>Upload Now
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary px-4" id="clearBtn">
+                                    <i class="fa-solid fa-rotate-left me-2"></i>Clear
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-md-5">
+                        <div class="upload-side-card">
+                            <h6 class="fw-bold mb-3">File Guidelines</h6>
+                            <ul class="upload-list">
+                                <li><i class="fa-solid fa-circle-check text-success me-2"></i>Use .xlsx, .xls</li>
+                                <li><i class="fa-solid fa-circle-check text-success me-2"></i>Keep required columns
+                                    ready</li>
+                                <li><i class="fa-solid fa-circle-check text-success me-2"></i>Prefer the template file
+                                </li>
+                                <li><i class="fa-solid fa-circle-check text-success me-2"></i>Product-Code : PXXXX Must
+                                    5+ Characters</li>
+
+                            </ul>
+
+                            <a href="{% url 'temp_excel' %}"
+                                class="btn btn-light w-100 mt-3 text-primary border border-black">
+                                <i class="fa-solid fa-file-arrow-down me-2 "></i>Download Template
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-<!-- User Guide modal -->
+</div>
+
 <div class="modal fade pt-7" id="userGuideModal" tabindex="-1" aria-hidden="true" style='z-index: 100000000;'>
     <div class="modal-dialog modal-dialog-centered modal-fullscreen modal-dialog-scrollable">
         <div class="modal-content border-0 shadow">
@@ -327,22 +351,33 @@
                 <!-- Top row: Format + Notes side by side -->
                 <div class="row g-4 mb-3">
                     <div class="col-md-6">
-                        <h6 class="fw-bold mb-2"><i class="fa-solid fa-file-excel text-success me-2"></i>Accepted File Format</h6>
+                        <h6 class="fw-bold mb-2"><i class="fa-solid fa-file-excel text-success me-2"></i>Accepted File
+                            Format</h6>
                         <ul class="upload-list mb-0 small">
-                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>File types: <strong>.xlsx</strong>, <strong>.xls</strong> &nbsp; only</li>
-                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>First row must contain the exact column headers, in the exact order, shown below</li>
-                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>Columns marked <span class="text-danger fw-semibold">*</span> are mandatory</li>
-                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>Do not add, remove, rename or reorder columns</li>
-                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>Use the <a href="{% url 'temp_excel' %}">Download Template</a> file as a starting point</li>
+                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>File types:
+                                <strong>.xlsx</strong>, <strong>.xls</strong> &nbsp; only</li>
+                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>First row must contain the
+                                exact column headers, in the exact order, shown below</li>
+                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>Columns marked <span
+                                    class="text-danger fw-semibold">*</span> are mandatory</li>
+                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>Do not add, remove, rename or
+                                reorder columns</li>
+                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>Use the <a
+                                    href="{% url 'temp_excel' %}">Download Template</a> file as a starting point</li>
                         </ul>
                     </div>
 
                     <div class="col-md-6 border-start-md ps-md-4">
-                        <h6 class="fw-bold mb-2"><i class="fa-solid fa-triangle-exclamation text-warning me-2"></i>Notes</h6>
+                        <h6 class="fw-bold mb-2"><i class="fa-solid fa-triangle-exclamation text-warning me-2"></i>Notes
+                        </h6>
                         <ul class="upload-list mb-0 small">
-                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>Rows with duplicate Product Code / Name (within the file or already in the database) are rejected</li>
-                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>Rejected rows are listed on the <a href="{% url 'upload_data_error' %}">Invalid Data</a> page with the reason for failure</li>
-                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>Valid rows are imported even if some other rows in the same file fail</li>
+                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>Rows with duplicate Product
+                                Code / Name (within the file or already in the database) are rejected</li>
+                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>Rejected rows are listed on
+                                the <a href="{% url 'upload_data_error' %}">Invalid Data</a> page with the reason for
+                                failure</li>
+                            <li><i class="fa-solid fa-circle-check text-success me-2"></i>Valid rows are imported even
+                                if some other rows in the same file fail</li>
                         </ul>
                     </div>
                 </div>
@@ -350,7 +385,8 @@
                 <hr class="my-3">
 
                 <!-- Column Rules table -->
-                <h6 class="fw-bold mb-2"><i class="fa-solid fa-list-check text-primary me-2"></i>Column Rules &amp; Limitations</h6>
+                <h6 class="fw-bold mb-2"><i class="fa-solid fa-list-check text-primary me-2"></i>Column Rules &amp;
+                    Limitations</h6>
                 <div class="table-responsive">
                     <table class="table table-sm table-bordered align-middle mb-0 small">
                         <thead class="table-light">
@@ -364,12 +400,14 @@
                             <tr>
                                 <td>Product code*</td>
                                 <td><span class="badge text-bg-danger">Must</span></td>
-                                <td>Starts with <code>P</code> followed by 5+ digits (e.g. <code>P1001</code>); max 20 characters; must be unique (not already used in file or database)</td>
+                                <td>Starts with <code>P</code> followed by 5+ digits (e.g. <code>P1001</code>); max 20
+                                    characters; must be unique (not already used in file or database)</td>
                             </tr>
                             <tr>
                                 <td>Product name*</td>
                                 <td><span class="badge text-bg-danger">Must</span></td>
-                                <td>Must start with a letter; letters, numbers, spaces and <code>- ( ) .</code> only; max 50 characters; must be unique</td>
+                                <td>Must start with a letter; letters, numbers, spaces and <code>- ( ) .</code> only;
+                                    max 50 characters; must be unique</td>
                             </tr>
                             <tr>
                                 <td>Description</td>
@@ -419,277 +457,287 @@
 
 
 
-    <!-- Delete confirmation modal -->
-    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-body text-center p-4">
-                    <div class="mb-3">
-                        <i class="fa-solid fa-triangle-exclamation text-danger" style="font-size: 2.5rem;"></i>
-                    </div>
-                    <h5 class="fw-bold mb-2">Delete Product?</h5>
-                    <p class="text-muted mb-0">
-                        Are you sure you want to delete <strong id="deleteProductName"></strong>? This action cannot be undone.
-                    </p>
+<!-- Delete confirmation modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-body text-center p-4">
+                <div class="mb-3">
+                    <i class="fa-solid fa-triangle-exclamation text-danger" style="font-size: 2.5rem;"></i>
                 </div>
-                <div class="modal-footer border-0 justify-content-center pb-4">
-                    <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger px-4" id="confirmDeleteBtn">
-                        <i class="fa-solid fa-trash me-1"></i>Delete
-                    </button>
-                </div>
+                <h5 class="fw-bold mb-2">Delete Product?</h5>
+                <p class="text-muted mb-0">
+                    Are you sure you want to delete <strong id="deleteProductName"></strong>? This action cannot be
+                    undone.
+                </p>
+            </div>
+            <div class="modal-footer border-0 justify-content-center pb-4">
+                <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger px-4" id="confirmDeleteBtn">
+                    <i class="fa-solid fa-trash me-1"></i>Delete
+                </button>
             </div>
         </div>
     </div>
+</div>
 
-    <nav class="d-flex justify-content-center mt-4">
-        <ul class="pagination shadow-sm">
-            {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page=1{% if request.GET.product_code %}&product_code={{ request.GET.product_code }}{% endif %}{% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}{% if request.GET.cost_price %}&cost_price={{ request.GET.cost_price }}{% endif %}">&laquo; First</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.product_code %}&product_code={{ request.GET.product_code }}{% endif %}{% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}{% if request.GET.cost_price %}&cost_price={{ request.GET.cost_price }}{% endif %}">&lsaquo; Previous</a>
-                </li>
-            {% else %}
-                <li class="page-item disabled"><span class="page-link">&laquo; First</span></li>
-                <li class="page-item disabled"><span class="page-link">&lsaquo; Previous</span></li>
+<nav class="d-flex justify-content-center mt-4">
+    <ul class="pagination shadow-sm">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link"
+                href="?page=1{% if request.GET.product_code %}&product_code={{ request.GET.product_code }}{% endif %}{% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}{% if request.GET.cost_price %}&cost_price={{ request.GET.cost_price }}{% endif %}">&laquo;
+                First</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link"
+                href="?page={{ page_obj.previous_page_number }}{% if request.GET.product_code %}&product_code={{ request.GET.product_code }}{% endif %}{% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}{% if request.GET.cost_price %}&cost_price={{ request.GET.cost_price }}{% endif %}">&lsaquo;
+                Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">&laquo; First</span></li>
+        <li class="page-item disabled"><span class="page-link">&lsaquo; Previous</span></li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+        {% elif num >= page_obj.number|add:"-2" and num <= page_obj.number|add:"2" %} <li class="page-item">
+            <a class="page-link"
+                href="?page={{ num }}{% if request.GET.product_code %}&product_code={{ request.GET.product_code }}{% endif %}{% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}{% if request.GET.cost_price %}&cost_price={{ request.GET.cost_price }}{% endif %}">{{
+                num }}</a>
+            </li>
             {% endif %}
-
-            {% for num in page_obj.paginator.page_range %}
-                {% if page_obj.number == num %}
-                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
-                {% elif num >= page_obj.number|add:"-2" and num <= page_obj.number|add:"2" %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ num }}{% if request.GET.product_code %}&product_code={{ request.GET.product_code }}{% endif %}{% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}{% if request.GET.cost_price %}&cost_price={{ request.GET.cost_price }}{% endif %}">{{ num }}</a>
-                    </li>
-                {% endif %}
             {% endfor %}
 
             {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.product_code %}&product_code={{ request.GET.product_code }}{% endif %}{% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}{% if request.GET.cost_price %}&cost_price={{ request.GET.cost_price }}{% endif %}">Next &rsaquo;</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.product_code %}&product_code={{ request.GET.product_code }}{% endif %}{% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}{% if request.GET.cost_price %}&cost_price={{ request.GET.cost_price }}{% endif %}">Last &raquo;</a>
-                </li>
+            <li class="page-item">
+                <a class="page-link"
+                    href="?page={{ page_obj.next_page_number }}{% if request.GET.product_code %}&product_code={{ request.GET.product_code }}{% endif %}{% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}{% if request.GET.cost_price %}&cost_price={{ request.GET.cost_price }}{% endif %}">Next
+                    &rsaquo;</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link"
+                    href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.product_code %}&product_code={{ request.GET.product_code }}{% endif %}{% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}{% if request.GET.cost_price %}&cost_price={{ request.GET.cost_price }}{% endif %}">Last
+                    &raquo;</a>
+            </li>
             {% else %}
-                <li class="page-item disabled"><span class="page-link">Next &rsaquo;</span></li>
-                <li class="page-item disabled"><span class="page-link">Last &raquo;</span></li>
+            <li class="page-item disabled"><span class="page-link">Next &rsaquo;</span></li>
+            <li class="page-item disabled"><span class="page-link">Last &raquo;</span></li>
             {% endif %}
-        </ul>
-    </nav>
+    </ul>
+</nav>
 
-    {% if page_obj %}
-    <div class="text-center mt-2 text-muted">
-        Showing page <strong>{{ page_obj.number }}</strong> of <strong>{{ page_obj.paginator.num_pages }}</strong>
-    </div>
-    {% endif %}
+{% if page_obj %}
+<div class="text-center mt-2 text-muted">
+    Showing page <strong>{{ page_obj.number }}</strong> of <strong>{{ page_obj.paginator.num_pages }}</strong>
+</div>
+{% endif %}
 </div>
 
 <script>
 
 
-document.addEventListener("DOMContentLoaded", function () {
-    const filterForm = document.getElementById("filterForm");
-    const filterInputs = document.querySelectorAll("#filterForm input, #filterForm select");
-    filterInputs.forEach(function (el) {
-        el.addEventListener("change", function () { filterForm.submit(); });
-        el.addEventListener("keyup", function () { filterForm.submit(); });
-    });
-
-    const deleteModalEl = document.getElementById("deleteConfirmModal");
-    const deleteModal = deleteModalEl ? new bootstrap.Modal(deleteModalEl) : null;
-    let deleteUrl = null;
-
-    $(document).on("click", ".js-delete-product", function (e) {
-        e.preventDefault();
-        deleteUrl = $(this).attr("href");
-        $("#deleteProductName").text($(this).data("product-name"));
-        if (deleteModal) deleteModal.show();
-    });
-
-    $("#confirmDeleteBtn").on("click", function () {
-        if (deleteUrl) {
-            window.location.href = deleteUrl;
-        }
-    });
-
-    const fileInput = document.getElementById("fileInput");
-    const chooseFileBtn = document.getElementById("chooseFileBtn");
-    const clearBtn = document.getElementById("clearBtn");
-    const fileInfo = document.getElementById("fileInfo");
-    const dropZone = document.getElementById("dropZone");
-
-    if (chooseFileBtn && fileInput) {
-        chooseFileBtn.addEventListener("click", function () { fileInput.click(); });
-    }
-
-    if (fileInput && fileInfo) {
-        fileInput.addEventListener("change", function () {
-            fileInfo.textContent = fileInput.files.length > 0 ? fileInput.files[0].name : "No file selected";
+    document.addEventListener("DOMContentLoaded", function () {
+        const filterForm = document.getElementById("filterForm");
+        const filterInputs = document.querySelectorAll("#filterForm input, #filterForm select");
+        filterInputs.forEach(function (el) {
+            el.addEventListener("change", function () { filterForm.submit(); });
+            el.addEventListener("keyup", function () { filterForm.submit(); });
         });
-    }
 
-    if (clearBtn && fileInput && fileInfo) {
-        clearBtn.addEventListener("click", function () {
-            fileInput.value = "";
-            fileInfo.textContent = "No file selected";
-        });
-    }
+        const deleteModalEl = document.getElementById("deleteConfirmModal");
+        const deleteModal = deleteModalEl ? new bootstrap.Modal(deleteModalEl) : null;
+        let deleteUrl = null;
 
-    if (dropZone && fileInput && fileInfo) {
-        dropZone.addEventListener("dragover", function (e) {
+        $(document).on("click", ".js-delete-product", function (e) {
             e.preventDefault();
-            dropZone.classList.add("dragover");
+            deleteUrl = $(this).attr("href");
+            $("#deleteProductName").text($(this).data("product-name"));
+            if (deleteModal) deleteModal.show();
         });
-        dropZone.addEventListener("dragleave", function () {
-            dropZone.classList.remove("dragover");
-        });
-        dropZone.addEventListener("drop", function (e) {
-            e.preventDefault();
-            dropZone.classList.remove("dragover");
-            if (e.dataTransfer.files.length > 0) {
-                fileInput.files = e.dataTransfer.files;
-                fileInfo.textContent = e.dataTransfer.files[0].name;
+
+        $("#confirmDeleteBtn").on("click", function () {
+            if (deleteUrl) {
+                window.location.href = deleteUrl;
             }
         });
-    }
 
-    function stripDateTime(input) {
-        if (input && input.value) input.value = input.value.split(' ')[0].trim();
-    }
+        const fileInput = document.getElementById("fileInput");
+        const chooseFileBtn = document.getElementById("chooseFileBtn");
+        const clearBtn = document.getElementById("clearBtn");
+        const fileInfo = document.getElementById("fileInfo");
+        const dropZone = document.getElementById("dropZone");
 
-    function setFieldError(input, msg) {
-        if (!input) return;
-        input.classList.add("input-error");
-        const errDiv = input.nextElementSibling;
-        if (errDiv && errDiv.classList.contains("error")) {
-            errDiv.textContent = msg;
-            errDiv.style.display = "block";
-        }
-    }
-
-    function clearFieldError(input) {
-        if (!input) return;
-        input.classList.remove("input-error");
-        const errDiv = input.nextElementSibling;
-        if (errDiv && errDiv.classList.contains("error")) {
-            errDiv.textContent = "";
-            errDiv.style.display = "none";
-        }
-    }
-
-    function validateUpdateForm(form) {
-        const nameInput = form.querySelector('[name="product_name"]');
-        const descInput = form.querySelector('[name="description"]');
-        const catInput = form.querySelector('[name="item_category"]');
-        const qtyInput = form.querySelector('[name="quantity"]');
-        const costInput = form.querySelector('[name="cost_price"]');
-        const sellInput = form.querySelector('[name="selling_price"]');
-        const expInput = form.querySelector('[name="expire_date"]');
-
-        stripDateTime(expInput);
-        [nameInput, descInput, catInput, qtyInput, costInput, sellInput, expInput].forEach(clearFieldError);
-
-        let hasError = false;
-
-        const name = nameInput ? nameInput.value.trim() : "";
-        if (!name) {
-            setFieldError(nameInput, "Product Name is required.");
-            hasError = true;
-        } else if (!/^[A-Za-z][A-Za-z0-9\s]*$/.test(name)) {
-        setFieldError(nameInput, "Must start with a letter; letters and numbers only.");
-        hasError = true;
+        if (chooseFileBtn && fileInput) {
+            chooseFileBtn.addEventListener("click", function () { fileInput.click(); });
         }
 
-        const desc = descInput ? descInput.value.trim() : "";
-        if (desc.length > 150) {
-            setFieldError(descInput, "Description cannot exceed 150 characters.");
-            hasError = true;
-        }
-
-        const cat = catInput ? catInput.value.trim() : "";
-        if (cat.length > 150) {
-            setFieldError(catInput, "Item Category cannot exceed 150 characters.");
-            hasError = true;
-        }
-
-        const qty = qtyInput ? qtyInput.value.trim() : "";
-        if (qty === "") {
-            setFieldError(qtyInput, "Quantity is required.");
-            hasError = true;
-        } else {
-            const qtyNum = Number(qty);
-            if (!Number.isInteger(qtyNum) || qtyNum < 0) {
-                setFieldError(qtyInput, "Must be a non-negative whole number.");
-                hasError = true;
-            } else if (qtyNum > 5000) {
-                setFieldError(qtyInput, "Quantity cannot exceed 5,000.");
-                hasError = true;
-            }
-        }
-
-        const cost = costInput ? costInput.value.trim() : "";
-        if(cost){
-            const costNum = parseFloat(cost);
-            if (isNaN(costNum) || costNum <= 0) {
-                setFieldError(costInput, "Must be a non-negative number.");
-                hasError = true;
-            } else if (costNum > 10000000) {
-                setFieldError(costInput, "Cannot exceed ₹1 Crore (₹1,00,00,000).");
-                hasError = true;
-            }
-        }
-
-        const sell = sellInput ? sellInput.value.trim() : "";
-        if (sell === "") {
-            setFieldError(sellInput, "Selling Price is required.");
-            hasError = true;
-        } else if (isNaN(parseFloat(sell)) || parseFloat(sell) < 0) {
-            setFieldError(sellInput, "Must be a non-negative number.");
-            hasError = true;
-        }
-
-         const exp = expInput ? expInput.value.trim() : "";
-        if (!exp) {
-            setFieldError(expInput, "Expire Date is required.");
-            hasError = true;
-        } else {
-            const expDate = new Date(exp + "T00:00:00");
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-        if (expDate < today) {
-            setFieldError(expInput, "Expire Date must not be in the past.");
-            hasError = true;
-        }
-    }
-
-        return hasError;
-    }
-
-    document.querySelectorAll(".update-product-form").forEach(function (form) {
-        const modalEl = form.closest(".modal");
-        if (modalEl) {
-            modalEl.addEventListener("shown.bs.modal", function () {
-                stripDateTime(form.querySelector('[name="expire_date"]'));
-                form.querySelectorAll(".input-error").forEach(clearFieldError);
+        if (fileInput && fileInfo) {
+            fileInput.addEventListener("change", function () {
+                fileInfo.textContent = fileInput.files.length > 0 ? fileInput.files[0].name : "No file selected";
             });
         }
 
-        form.querySelectorAll("input").forEach(function (input) {
-            input.addEventListener("input", function () { clearFieldError(input); });
-        });
+        if (clearBtn && fileInput && fileInfo) {
+            clearBtn.addEventListener("click", function () {
+                fileInput.value = "";
+                fileInfo.textContent = "No file selected";
+            });
+        }
 
-        form.addEventListener("submit", function (e) {
-            if (validateUpdateForm(form)) {
+        if (dropZone && fileInput && fileInfo) {
+            dropZone.addEventListener("dragover", function (e) {
                 e.preventDefault();
-                const firstBad = form.querySelector(".input-error");
-                if (firstBad) firstBad.scrollIntoView({ behavior: "smooth", block: "center" });
+                dropZone.classList.add("dragover");
+            });
+            dropZone.addEventListener("dragleave", function () {
+                dropZone.classList.remove("dragover");
+            });
+            dropZone.addEventListener("drop", function (e) {
+                e.preventDefault();
+                dropZone.classList.remove("dragover");
+                if (e.dataTransfer.files.length > 0) {
+                    fileInput.files = e.dataTransfer.files;
+                    fileInfo.textContent = e.dataTransfer.files[0].name;
+                }
+            });
+        }
+
+        function stripDateTime(input) {
+            if (input && input.value) input.value = input.value.split(' ')[0].trim();
+        }
+
+        function setFieldError(input, msg) {
+            if (!input) return;
+            input.classList.add("input-error");
+            const errDiv = input.nextElementSibling;
+            if (errDiv && errDiv.classList.contains("error")) {
+                errDiv.textContent = msg;
+                errDiv.style.display = "block";
             }
+        }
+
+        function clearFieldError(input) {
+            if (!input) return;
+            input.classList.remove("input-error");
+            const errDiv = input.nextElementSibling;
+            if (errDiv && errDiv.classList.contains("error")) {
+                errDiv.textContent = "";
+                errDiv.style.display = "none";
+            }
+        }
+
+        function validateUpdateForm(form) {
+            const nameInput = form.querySelector('[name="product_name"]');
+            const descInput = form.querySelector('[name="description"]');
+            const catInput = form.querySelector('[name="item_category"]');
+            const qtyInput = form.querySelector('[name="quantity"]');
+            const costInput = form.querySelector('[name="cost_price"]');
+            const sellInput = form.querySelector('[name="selling_price"]');
+            const expInput = form.querySelector('[name="expire_date"]');
+
+            stripDateTime(expInput);
+            [nameInput, descInput, catInput, qtyInput, costInput, sellInput, expInput].forEach(clearFieldError);
+
+            let hasError = false;
+
+            const name = nameInput ? nameInput.value.trim() : "";
+            if (!name) {
+                setFieldError(nameInput, "Product Name is required.");
+                hasError = true;
+            } else if (!/^[A-Za-z][A-Za-z0-9\s]*$/.test(name)) {
+                setFieldError(nameInput, "Must start with a letter; letters and numbers only.");
+                hasError = true;
+            }
+
+            const desc = descInput ? descInput.value.trim() : "";
+            if (desc.length > 150) {
+                setFieldError(descInput, "Description cannot exceed 150 characters.");
+                hasError = true;
+            }
+
+            const cat = catInput ? catInput.value.trim() : "";
+            if (cat.length > 150) {
+                setFieldError(catInput, "Item Category cannot exceed 150 characters.");
+                hasError = true;
+            }
+
+            const qty = qtyInput ? qtyInput.value.trim() : "";
+            if (qty === "") {
+                setFieldError(qtyInput, "Quantity is required.");
+                hasError = true;
+            } else {
+                const qtyNum = Number(qty);
+                if (!Number.isInteger(qtyNum) || qtyNum < 0) {
+                    setFieldError(qtyInput, "Must be a non-negative whole number.");
+                    hasError = true;
+                } else if (qtyNum > 5000) {
+                    setFieldError(qtyInput, "Quantity cannot exceed 5,000.");
+                    hasError = true;
+                }
+            }
+
+            const cost = costInput ? costInput.value.trim() : "";
+            if (cost) {
+                const costNum = parseFloat(cost);
+                if (isNaN(costNum) || costNum <= 0) {
+                    setFieldError(costInput, "Must be a non-negative number.");
+                    hasError = true;
+                } else if (costNum > 10000000) {
+                    setFieldError(costInput, "Cannot exceed ₹1 Crore (₹1,00,00,000).");
+                    hasError = true;
+                }
+            }
+
+            const sell = sellInput ? sellInput.value.trim() : "";
+            if (sell === "") {
+                setFieldError(sellInput, "Selling Price is required.");
+                hasError = true;
+            } else if (isNaN(parseFloat(sell)) || parseFloat(sell) < 0) {
+                setFieldError(sellInput, "Must be a non-negative number.");
+                hasError = true;
+            }
+
+            const exp = expInput ? expInput.value.trim() : "";
+            if (!exp) {
+                setFieldError(expInput, "Expire Date is required.");
+                hasError = true;
+            } else {
+                const expDate = new Date(exp + "T00:00:00");
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                if (expDate < today) {
+                    setFieldError(expInput, "Expire Date must not be in the past.");
+                    hasError = true;
+                }
+            }
+
+            return hasError;
+        }
+
+        document.querySelectorAll(".update-product-form").forEach(function (form) {
+            const modalEl = form.closest(".modal");
+            if (modalEl) {
+                modalEl.addEventListener("shown.bs.modal", function () {
+                    stripDateTime(form.querySelector('[name="expire_date"]'));
+                    form.querySelectorAll(".input-error").forEach(clearFieldError);
+                });
+            }
+
+            form.querySelectorAll("input").forEach(function (input) {
+                input.addEventListener("input", function () { clearFieldError(input); });
+            });
+
+            form.addEventListener("submit", function (e) {
+                if (validateUpdateForm(form)) {
+                    e.preventDefault();
+                    const firstBad = form.querySelector(".input-error");
+                    if (firstBad) firstBad.scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+            });
         });
     });
-});
 
 </script>
 

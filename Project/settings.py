@@ -48,9 +48,9 @@ REDIS_URL = os.getenv(
 )
 
 
-# Pending
 DEBUG = os.getenv('DEBUG_MODE')=='True'
-ALLOWED_HOSTS = ['.vercel.app']
+
+ALLOWED_HOSTS = ['.vercel.app','localhost','127.0.0.1']
 ALLOWED_EMAIL_DOMAINS = [
     "inessconsulting.com",
     "gmail.com"
@@ -250,3 +250,17 @@ CHANNEL_LAYERS = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+IS_PRODUCTION = SERVER_TYPE == PRODUCTION
+if IS_PRODUCTION:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000 
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")  
+else:
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+    SECURE_HSTS_SECONDS = 0

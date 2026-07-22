@@ -5,137 +5,157 @@
 <link rel="stylesheet" href="{% static 'css/login.css' %}">
 
 <style>
-  :root {
-    --bs-primary: #2F5CFF;
-    --bs-primary-rgb: 47, 92, 255;
-    --primary-dark: #1E40D6;
-    --primary-soft: #EEF2FF;
-    --success: #16A34A;
-    --danger: #DC2626;
-    --ink: #10142A;
-    --muted: #6B7280;
-    --border: #E2E6F0;
-  }
+    :root {
+        --bs-primary: #2F5CFF;
+        --bs-primary-rgb: 47, 92, 255;
+        --primary-dark: #1E40D6;
+        --primary-soft: #EEF2FF;
+        --success: #16A34A;
+        --danger: #DC2626;
+        --ink: #10142A;
+        --muted: #6B7280;
+        --border: #E2E6F0;
+    }
 
-  .input-group-modern {
-    position: relative;
-    display: flex;
-    align-items: center;
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    background: #fff;
-    overflow: hidden;
-    transition: border-color .18s ease, box-shadow .18s ease, transform .12s ease;
-  }
+    .input-group-modern {
+        position: relative;
+        display: flex;
+        align-items: center;
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        background: #fff;
+        overflow: hidden;
+        transition: border-color .18s ease, box-shadow .18s ease, transform .12s ease;
+    }
 
-  .input-group-modern:focus-within {
-    border-color: var(--bs-primary);
-    box-shadow: 0 0 0 4px rgba(47, 92, 255, 0.12);
-    transform: translateY(-1px);
-  }
+    .input-group-modern:focus-within {
+        border-color: var(--bs-primary);
+        box-shadow: 0 0 0 4px rgba(47, 92, 255, 0.12);
+        transform: translateY(-1px);
+    }
 
-  .input-group-modern.is-valid-field { border-color: var(--success); }
-  .input-group-modern.is-invalid-field { border-color: var(--danger); }
+    .input-group-modern.is-valid-field {
+        border-color: var(--success);
+    }
 
-  .input-group-modern .field-icon {
-    width: 42px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--muted);
-    font-size: 0.9rem;
-    flex-shrink: 0;
-  }
+    .input-group-modern.is-invalid-field {
+        border-color: var(--danger);
+    }
 
-  .input-group-modern:focus-within .field-icon { color: var(--bs-primary); }
+    .input-group-modern .field-icon {
+        width: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted);
+        font-size: 0.9rem;
+        flex-shrink: 0;
+    }
 
-  .input-group-modern input {
-    border: none;
-    outline: none;
-    background: transparent;
-    flex: 1;
-    min-width: 0;
-    padding: 12px 4px;
-    font-size: 0.94rem;
-    color: var(--ink);
-  }
+    .input-group-modern:focus-within .field-icon {
+        color: var(--bs-primary);
+    }
 
-  .field-trailing {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    padding-right: 8px;
-    flex-shrink: 0;
-  }
+    .input-group-modern input {
+        border: none;
+        outline: none;
+        background: transparent;
+        flex: 1;
+        min-width: 0;
+        padding: 12px 4px;
+        font-size: 0.94rem;
+        color: var(--ink);
+    }
 
-  .check-icon {
-    color: var(--success);
-    font-size: 1rem;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    width: 26px;
-    animation: pop-in .22s ease;
-  }
+    .field-trailing {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        padding-right: 8px;
+        flex-shrink: 0;
+    }
 
-  @keyframes pop-in {
-    from { transform: scale(0.5); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-  }
+    .check-icon {
+        color: var(--success);
+        font-size: 1rem;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        animation: pop-in .22s ease;
+    }
 
-  .input-group-modern.is-valid-field .check-icon { display: inline-flex; }
+    @keyframes pop-in {
+        from {
+            transform: scale(0.5);
+            opacity: 0;
+        }
 
-  .toggle-btn {
-    background: transparent;
-    border: none;
-    color: var(--muted);
-    width: 30px;
-    height: 30px;
-    border-radius: 8px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: background .15s ease, color .15s ease;
-  }
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
 
-  .toggle-btn:hover {
-    background: var(--primary-soft);
-    color: var(--bs-primary);
-  }
+    .input-group-modern.is-valid-field .check-icon {
+        display: inline-flex;
+    }
 
-  .field-error {
-    min-height: 16px;
-    margin-top: 5px;
-    font-size: 0.78rem;
-    line-height: 1.2;
-    color: var(--danger);
-  }
+    .toggle-btn {
+        background: transparent;
+        border: none;
+        color: var(--muted);
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: background .15s ease, color .15s ease;
+    }
 
-  .field-error:empty { min-height: 0; margin-top: 0; }
+    .toggle-btn:hover {
+        background: var(--primary-soft);
+        color: var(--bs-primary);
+    }
 
-  .auth-btn {
-    border-radius: 12px;
-    font-weight: 600;
-    background: linear-gradient(135deg, var(--bs-primary), var(--primary-dark));
-    border: none;
-    box-shadow: 0 10px 22px rgba(47, 92, 255, 0.25);
-    transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
-  }
+    .field-error {
+        min-height: 16px;
+        margin-top: 5px;
+        font-size: 0.78rem;
+        line-height: 1.2;
+        color: var(--danger);
+    }
 
-  .auth-btn:active {
-    transform: translateY(1px) scale(0.99);
-    box-shadow: 0 6px 14px rgba(47, 92, 255, 0.22);
-  }
+    .field-error:empty {
+        min-height: 0;
+        margin-top: 0;
+    }
 
-  .auth-btn:hover { filter: brightness(1.04); }
+    .auth-btn {
+        border-radius: 12px;
+        font-weight: 600;
+        background: linear-gradient(135deg, var(--bs-primary), var(--primary-dark));
+        border: none;
+        box-shadow: 0 10px 22px rgba(47, 92, 255, 0.25);
+        transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+    }
+
+    .auth-btn:active {
+        transform: translateY(1px) scale(0.99);
+        box-shadow: 0 6px 14px rgba(47, 92, 255, 0.22);
+    }
+
+    .auth-btn:hover {
+        filter: brightness(1.04);
+    }
 </style>
 
 <!-- Toast Messages -->
 <div class="toast-container position-fixed top-1 end-0 p-3 mt-5">
     {% if messages %}
-        {% for message in messages %}
-            <div
-                class="toast align-items-center border-0
+    {% for message in messages %}
+    <div class="toast align-items-center border-0
                 {% if message.tags == 'error' %}
                     text-bg-danger
                 {% elif message.tags == 'success' %}
@@ -144,27 +164,20 @@
                     text-bg-warning
                 {% else %}
                     text-bg-info
-                {% endif %}"
-                role="alert"
-                aria-live="assertive"
-                aria-atomic="true"
-                data-bs-delay="3000"
-                data-bs-autohide="true">
+                {% endif %}" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000"
+        data-bs-autohide="true">
 
-                <div class="d-flex">
-                    <div class="toast-body">
-                        {{ message }}
-                    </div>
-
-                    <button
-                        type="button"
-                        class="btn-close btn-close-white me-2 m-auto"
-                        data-bs-dismiss="toast"
-                        aria-label="Close">
-                    </button>
-                </div>
+        <div class="d-flex">
+            <div class="toast-body">
+                {{ message }}
             </div>
-        {% endfor %}
+
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                aria-label="Close">
+            </button>
+        </div>
+    </div>
+    {% endfor %}
     {% endif %}
 </div>
 
@@ -244,12 +257,8 @@
                                                 <i class="fa-solid fa-envelope"></i>
                                             </span>
 
-                                            <input
-                                                type="text"
-                                                name="email"
-                                                id="id_email"
-                                                placeholder="Enter the Username/Email "
-                                                required>
+                                            <input type="text" name="email" id="id_email"
+                                                placeholder="Enter the Username/Email " required>
 
                                             <span class="field-trailing">
                                                 <span class="check-icon"><i class="fa-solid fa-circle-check"></i></span>
@@ -271,23 +280,15 @@
                                                 <i class="fa-solid fa-lock"></i>
                                             </span>
 
-                                            <input
-                                                type="password"
-                                                id="id_password"
-                                                name="password"
-                                                placeholder="Password"
-                                                required>
+                                            <input type="password" id="id_password" name="password"
+                                                placeholder="Password" required>
 
                                             <span class="field-trailing">
                                                 <span class="check-icon"><i class="fa-solid fa-circle-check"></i></span>
-                                                <button
-                                                    class="toggle-btn"
-                                                    type="button"
-                                                    id="togglePassword"
+                                                <button class="toggle-btn" type="button" id="togglePassword"
                                                     aria-label="Show password">
 
-                                                    <i class="fa-regular fa-eye"
-                                                       id="toggleIcon"></i>
+                                                    <i class="fa-regular fa-eye" id="toggleIcon"></i>
 
                                                 </button>
                                             </span>
@@ -299,8 +300,7 @@
 
                                     <div class="d-flex justify-content-end mb-4">
 
-                                        <a href="{% url 'password_reset' %}"
-                                           class="text-decoration-none">
+                                        <a href="{% url 'password_reset' %}" class="text-decoration-none">
 
                                             Forgot Password?
 
@@ -308,27 +308,24 @@
 
                                     </div>
 
-                                    <button
-                                    type="submit"
-                                    id="loginBtn"
-                                    class="btn btn-primary w-100 py-2 auth-btn text-white">
-                                    <span id="loginText">
-                                        <i class="fa-solid fa-right-to-bracket me-2"></i>
-                                        Login
-                                    </span>
+                                    <button type="submit" id="loginBtn"
+                                        class="btn btn-primary w-100 py-2 auth-btn text-white">
+                                        <span id="loginText">
+                                            <i class="fa-solid fa-right-to-bracket me-2"></i>
+                                            Login
+                                        </span>
 
-    <span id="loginSpinner" class="d-none">
-        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-        Logging in...
-    </span>
+                                        <span id="loginSpinner" class="d-none">
+                                            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                            Logging in...
+                                        </span>
 
-</button>
+                                    </button>
                                     <div class="text-center mt-4">
                                         <span class="text-muted">
                                             Don't have an account?
                                         </span>
-                                        <a href="{% url 'tool_signup_info' %}"
-                                           class="text-success">
+                                        <a href="{% url 'tool_signup_info' %}" class="text-success">
 
                                             Register
 
@@ -352,106 +349,106 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
 
-    const toggleBtn = document.getElementById("togglePassword");
-    const passwordInput = document.getElementById("id_password");
-    const toggleIcon = document.getElementById("toggleIcon");
+        const toggleBtn = document.getElementById("togglePassword");
+        const passwordInput = document.getElementById("id_password");
+        const toggleIcon = document.getElementById("toggleIcon");
 
-    if (toggleBtn) {
-        toggleBtn.addEventListener("click", function () {
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                toggleIcon.classList.remove("fa-eye");
-                toggleIcon.classList.add("fa-eye-slash");
-            } else {
-                passwordInput.type = "password";
-                toggleIcon.classList.remove("fa-eye-slash");
-                toggleIcon.classList.add("fa-eye");
-            }
+        if (toggleBtn) {
+            toggleBtn.addEventListener("click", function () {
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    toggleIcon.classList.remove("fa-eye");
+                    toggleIcon.classList.add("fa-eye-slash");
+                } else {
+                    passwordInput.type = "password";
+                    toggleIcon.classList.remove("fa-eye-slash");
+                    toggleIcon.classList.add("fa-eye");
+                }
+            });
+        }
+
+        const toastElements = document.querySelectorAll(".toast");
+        toastElements.forEach(function (toastEl) {
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
         });
-    }
 
-    const toastElements = document.querySelectorAll(".toast");
-    toastElements.forEach(function (toastEl) {
-        const toast = new bootstrap.Toast(toastEl);
-        toast.show();
+        const form = document.getElementById("login_form");
+        const emailEl = document.getElementById("id_email");
+        const pwEl = document.getElementById("id_password");
+        const loginBtn = document.getElementById("loginBtn");
+        const loginText = document.getElementById("loginText");
+        const loginSpinner = document.getElementById("loginSpinner");
+
+
+        const MIN_PASSWORD_LENGTH = 6;
+
+        function setState(inputEl, state, message) {
+            const wrap = document.getElementById("wrap_" + inputEl.id.replace("id_", ""));
+            const errEl = document.getElementById("err_" + inputEl.id.replace("id_", ""));
+            if (!wrap) return;
+            wrap.classList.remove("is-valid-field", "is-invalid-field");
+            if (state === "valid") {
+                wrap.classList.add("is-valid-field");
+                if (errEl) errEl.textContent = "";
+            } else if (state === "invalid") {
+                wrap.classList.add("is-invalid-field");
+                if (errEl) errEl.textContent = message || "";
+            } else {
+                if (errEl) errEl.textContent = "";
+            }
+        }
+
+        function validateEmail(showError) {
+            const val = emailEl.value.trim();
+
+            if (!val) {
+                setState(emailEl, showError ? "invalid" : "neutral", "Username or email is required.");
+                return false;
+            }
+
+            setState(emailEl, "valid");
+            return true;
+        }
+
+        function validatePassword(showError) {
+            const val = pwEl.value || "";
+            if (!val) {
+                setState(pwEl, showError ? "invalid" : "neutral", "Password is required.");
+                return false;
+            }
+            if (val.length < MIN_PASSWORD_LENGTH) {
+                setState(pwEl, "invalid", "Password must be at least " + MIN_PASSWORD_LENGTH + " characters.");
+                return false;
+            }
+            setState(pwEl, "valid");
+            return true;
+        }
+
+        emailEl.addEventListener("input", function () { validateEmail(false); });
+        emailEl.addEventListener("blur", function () { validateEmail(true); });
+        pwEl.addEventListener("input", function () { validatePassword(false); });
+        pwEl.addEventListener("blur", function () { validatePassword(true); });
+
+        form.addEventListener("submit", function (e) {
+
+            const emailOk = validateEmail(true);
+            const pwOk = validatePassword(true);
+
+            if (!emailOk || !pwOk) {
+                e.preventDefault();
+                return false;
+            }
+
+            loginText.classList.add("d-none");
+            loginSpinner.classList.remove("d-none");
+
+            loginBtn.disabled = true;
+        });
+
     });
-
-    const form = document.getElementById("login_form");
-    const emailEl = document.getElementById("id_email");
-    const pwEl = document.getElementById("id_password");
-    const loginBtn = document.getElementById("loginBtn");
-    const loginText = document.getElementById("loginText");
-    const loginSpinner = document.getElementById("loginSpinner");
-
-
-    const MIN_PASSWORD_LENGTH = 6;
-
-    function setState(inputEl, state, message) {
-        const wrap = document.getElementById("wrap_" + inputEl.id.replace("id_", ""));
-        const errEl = document.getElementById("err_" + inputEl.id.replace("id_", ""));
-        if (!wrap) return;
-        wrap.classList.remove("is-valid-field", "is-invalid-field");
-        if (state === "valid") {
-            wrap.classList.add("is-valid-field");
-            if (errEl) errEl.textContent = "";
-        } else if (state === "invalid") {
-            wrap.classList.add("is-invalid-field");
-            if (errEl) errEl.textContent = message || "";
-        } else {
-            if (errEl) errEl.textContent = "";
-        }
-    }
-
-    function validateEmail(showError) {
-        const val = emailEl.value.trim();
-
-        if (!val) {
-            setState(emailEl, showError ? "invalid" : "neutral", "Username or email is required.");
-            return false;
-        }
-
-        setState(emailEl, "valid");
-        return true;
-    }
-
-    function validatePassword(showError) {
-        const val = pwEl.value || "";
-        if (!val) {
-            setState(pwEl, showError ? "invalid" : "neutral", "Password is required.");
-            return false;
-        }
-        if (val.length < MIN_PASSWORD_LENGTH) {
-            setState(pwEl, "invalid", "Password must be at least " + MIN_PASSWORD_LENGTH + " characters.");
-            return false;
-        }
-        setState(pwEl, "valid");
-        return true;
-    }
-
-    emailEl.addEventListener("input", function () { validateEmail(false); });
-    emailEl.addEventListener("blur", function () { validateEmail(true); });
-    pwEl.addEventListener("input", function () { validatePassword(false); });
-    pwEl.addEventListener("blur", function () { validatePassword(true); });
-
-    form.addEventListener("submit", function (e) {
-
-    const emailOk = validateEmail(true);
-    const pwOk = validatePassword(true);
-
-    if (!emailOk || !pwOk) {
-        e.preventDefault();
-        return false;
-    }
-
-    loginText.classList.add("d-none");
-    loginSpinner.classList.remove("d-none");
-
-    loginBtn.disabled = true;
-});
-
-});
 </script>
 
 {% endblock %}

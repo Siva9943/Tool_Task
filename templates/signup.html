@@ -14,7 +14,8 @@
     --border: #E2E6F0;
   }
 
-  html, body {
+  html,
+  body {
     height: 100%;
   }
 
@@ -43,12 +44,19 @@
     box-shadow: 0 24px 60px rgba(16, 20, 42, 0.10), 0 2px 8px rgba(16, 20, 42, 0.04);
     padding: clamp(20px, 3.4vh, 34px) clamp(20px, 4vw, 30px);
     scrollbar-width: thin;
-    animation: card-in 0.45s cubic-bezier(.2,.7,.3,1);
+    animation: card-in 0.45s cubic-bezier(.2, .7, .3, 1);
   }
 
   @keyframes card-in {
-    from { opacity: 0; transform: translateY(10px) scale(0.99); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(0.99);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
   }
 
   .signup-brand {
@@ -164,8 +172,15 @@
   }
 
   @keyframes pop-in {
-    from { transform: scale(0.5); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+    from {
+      transform: scale(0.5);
+      opacity: 0;
+    }
+
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
   }
 
   .input-group-modern.is-valid-field .check-icon {
@@ -202,7 +217,10 @@
     gap: 4px;
   }
 
-  .field-error:empty { min-height: 0; margin-top: 0; }
+  .field-error:empty {
+    min-height: 0;
+    margin-top: 0;
+  }
 
   .field-hint {
     min-height: 16px;
@@ -275,8 +293,13 @@
   }
 
   @media (max-height: 700px) {
-    .signup-brand { margin-bottom: 6px; }
-    .signup-subtitle { margin-bottom: 10px; }
+    .signup-brand {
+      margin-bottom: 6px;
+    }
+
+    .signup-subtitle {
+      margin-bottom: 10px;
+    }
   }
 
   [data-bs-theme="dark"] {
@@ -312,34 +335,28 @@
   }
 </style>
 <div class="toast-container position-fixed top-0 end-0 p-3 mt-5">
-    {% if messages %}
-        {% for message in messages %}
-            <div class="toast custom-toast align-items-center
+  {% if messages %}
+  {% for message in messages %}
+  <div class="toast custom-toast align-items-center
                 {% if message.tags == 'error' %}
                     text-bg-danger
                 {% else %}
                     text-bg-{{ message.tags }}
                 {% endif %}
-                border-0"
-                role="alert"
-                aria-live="assertive"
-                aria-atomic="true"
-                data-bs-delay="3000"
-                data-bs-autohide="true">
+                border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000"
+    data-bs-autohide="true">
 
-                <div class="d-flex">
-                    <div class="toast-body flex-grow-1">
-                        {{ message }}
-                    </div>
-                    <button type="button"
-                            class="btn-close btn-close-white me-2 m-auto"
-                            data-bs-dismiss="toast"
-                            aria-label="Close"></button>
-                </div>
+    <div class="d-flex">
+      <div class="toast-body flex-grow-1">
+        {{ message }}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+        aria-label="Close"></button>
+    </div>
 
-            </div>
-        {% endfor %}
-    {% endif %}
+  </div>
+  {% endfor %}
+  {% endif %}
 </div>
 
 <section class="signup-page">
@@ -350,33 +367,29 @@
     </div>
 
     {% if form.non_field_errors %}
-      <div class="alert alert-danger py-2">
-        {% for error in form.non_field_errors %}
-          <div>{{ error }}</div>
-        {% endfor %}
-      </div>
+    <div class="alert alert-danger py-2">
+      {% for error in form.non_field_errors %}
+      <div>{{ error }}</div>
+      {% endfor %}
+    </div>
     {% endif %}
 
     <form method="POST" action="{% url 'tool_signup_info' %}" id="signup_form" novalidate>
       {% csrf_token %}
 
       {% if otp_sent %}
-        <div class="otp-banner">
-          <i class="fa-solid fa-circle-info me-1" aria-hidden="true"></i>
-          Your Email is Valid to Receive a code {{ request.session.signup_pending_data.email|default:"" }}
-        </div>
+      <div class="otp-banner">
+        <i class="fa-solid fa-circle-info me-1" aria-hidden="true"></i>
+        Your Email is Valid to Receive a code {{ request.session.signup_pending_data.email|default:"" }}
+      </div>
       {% else %}
 
       <div class="field-group">
         <label class="form-label" for="id_full_name">Full name</label>
         <div class="input-group-modern" id="wrap_full_name">
           <span class="field-icon"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
-          <input type="text"
-                 id="id_full_name"
-                 name="full_name"
-                 placeholder="Enter Your FullName"
-                 required
-                 autocomplete="name">
+          <input type="text" id="id_full_name" name="full_name" placeholder="Enter Your FullName" required
+            autocomplete="name">
           <span class="field-trailing">
             <span class="check-icon"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></span>
           </span>
@@ -388,12 +401,7 @@
         <label class="form-label" for="id_email">Email address</label>
         <div class="input-group-modern" id="wrap_email">
           <span class="field-icon"><i class="fa-solid fa-envelope" aria-hidden="true"></i></span>
-          <input type="email"
-                 id="id_email"
-                 name="email"
-                 placeholder="Enter the email"
-                 required
-                 autocomplete="email">
+          <input type="email" id="id_email" name="email" placeholder="Enter the email" required autocomplete="email">
           <span class="field-trailing">
             <span class="check-icon"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></span>
           </span>
@@ -405,12 +413,8 @@
         <label class="form-label" for="id_password1">Password</label>
         <div class="input-group-modern" id="wrap_password1">
           <span class="field-icon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span>
-          <input type="password"
-                 id="id_password1"
-                 name="password1"
-                 placeholder="Enter the Password"
-                 required
-                 autocomplete="new-password">
+          <input type="password" id="id_password1" name="password1" placeholder="Enter the Password" required
+            autocomplete="new-password">
           <span class="field-trailing">
             <span class="check-icon"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></span>
             <button class="toggle-btn" type="button" id="togglePassword1" aria-label="Show password">
@@ -425,12 +429,8 @@
         <label class="form-label" for="id_password2">Confirm password</label>
         <div class="input-group-modern" id="wrap_password2">
           <span class="field-icon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span>
-          <input type="password"
-                 id="id_password2"
-                 name="password2"
-                 placeholder="Re-enter your password"
-                 required
-                 autocomplete="new-password">
+          <input type="password" id="id_password2" name="password2" placeholder="Re-enter your password" required
+            autocomplete="new-password">
           <span class="field-trailing">
             <span class="check-icon"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></span>
             <button class="toggle-btn" type="button" id="togglePassword2" aria-label="Show password">
@@ -451,55 +451,43 @@
         </div>
         <div class="input-group-modern" id="wrap_otp">
           <span class="field-icon"><i class="fa-solid fa-key" aria-hidden="true"></i></span>
-          <input type="number"
-                 id="id_otp"
-                 name="otp"
-                 placeholder="Enter 6-digit code"
-                 required
-                 maxlength="6"
-                 inputmode="numeric"
-                 autocomplete="one-time-code">
+          <input type="number" id="id_otp" name="otp" placeholder="Enter 6-digit code" required maxlength="6"
+            inputmode="numeric" autocomplete="one-time-code">
           <span class="field-trailing">
             <span class="check-icon"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></span>
           </span>
         </div>
-        
+
         <div class="field-error" id="err_otp"></div>
       </div>
       <input type="hidden" name="action" value="verify_otp">
       <!-- varify otp  -->
-      <button
-    type="submit"
-    id="verifyBtn"
-    class="btn btn-primary w-100 auth-btn text-white mt-2">
+      <button type="submit" id="verifyBtn" class="btn btn-primary w-100 auth-btn text-white mt-2">
 
-    <span id="verifyText">
-        <i class="fa-solid fa-check me-2" aria-hidden="true"></i>
-        Verify code
-    </span>
+        <span id="verifyText">
+          <i class="fa-solid fa-check me-2" aria-hidden="true"></i>
+          Verify code
+        </span>
 
-    <span id="verifySpinner" class="d-none">
-        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-        Verifying...
-    </span>
+        <span id="verifySpinner" class="d-none">
+          <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+          Verifying...
+        </span>
 
-</button>
+      </button>
 
       {% else %}
-        <button
-    type="submit"
-    id="registerBtn"
-    class="btn btn-primary w-100 auth-btn text-white mt-1">
+      <button type="submit" id="registerBtn" class="btn btn-primary w-100 auth-btn text-white mt-1">
 
-    <span id="registerText">
-        <i class="fa-solid fa-user-plus me-2" aria-hidden="true"></i>
-        Create account
-    </span>
+        <span id="registerText">
+          <i class="fa-solid fa-user-plus me-2" aria-hidden="true"></i>
+          Create account
+        </span>
 
-    <span id="registerSpinner" class="d-none">
-        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-        Creating account...
-    </span>
+        <span id="registerSpinner" class="d-none">
+          <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+          Creating account...
+        </span>
 
       </button>
       {% endif %}
@@ -692,37 +680,36 @@
     });
 
     form.addEventListener('submit', function (e) {
-    const results = bindings
+      const results = bindings
         .filter(function (pair) {
-            return document.getElementById(pair[0]);
+          return document.getElementById(pair[0]);
         })
         .map(function (pair) {
-            return pair[1](true);
+          return pair[1](true);
         });
 
-    const isValid = results.every(Boolean);
+      const isValid = results.every(Boolean);
 
-    if (!isValid) {
+      if (!isValid) {
         e.preventDefault();
         return false;
-    }
+      }
 
-    // Create Account button loading
-    const registerBtn = document.getElementById("registerBtn");
-    if (registerBtn) {
+      // Create Account button loading
+      const registerBtn = document.getElementById("registerBtn");
+      if (registerBtn) {
         document.getElementById("registerText").classList.add("d-none");
         document.getElementById("registerSpinner").classList.remove("d-none");
         registerBtn.disabled = true;
-    }
+      }
 
-    // Verify Code button loading
-    const verifyBtn = document.getElementById("verifyBtn");
-    if (verifyBtn) {
+      const verifyBtn = document.getElementById("verifyBtn");
+      if (verifyBtn) {
         document.getElementById("verifyText").classList.add("d-none");
         document.getElementById("verifySpinner").classList.remove("d-none");
         verifyBtn.disabled = true;
-    }
-});
+      }
+    });
   });
 </script>
 
